@@ -7,19 +7,15 @@ from models import (
     ReferenceMatch,
     VerificationStatus,
 )
-
 from verification.provider import (
     VerificationProvider,
 )
-
 from verification.service import (
     VerificationService,
 )
 
 
-class MockProvider(
-    VerificationProvider
-):
+class MockProvider(VerificationProvider):
     """
     Fake provider for testing.
     """
@@ -42,24 +38,12 @@ class MockProvider(
 
 def test_verified_reference():
 
-    reference = Reference(
-        raw_text=(
-            "Smith, J. (2020). "
-            "Example article."
-        )
-    )
+    reference = Reference(raw_text=("Smith, J. (2020). " "Example article."))
 
-    service = VerificationService(
-        providers=[
-            MockProvider()
-        ]
-    )
+    service = VerificationService(providers=[MockProvider()])
 
     result = service.verify(reference)
 
-    assert (
-        result.status
-        == VerificationStatus.VERIFIED
-    )
+    assert result.status == VerificationStatus.VERIFIED
 
     assert result.evidence is not None
