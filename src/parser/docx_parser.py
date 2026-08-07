@@ -9,6 +9,7 @@ from pathlib import Path
 
 from docx import Document as DocxDocument
 
+from extractor.metadata import extract_metadata
 from models import Reference
 
 from .reference_section import (
@@ -92,9 +93,11 @@ class DocxParser:
 
         entries = split_references(self.extract_reference_section())
 
-        return [
+        references = [
             Reference(
                 raw_text=entry,
             )
             for entry in entries
         ]
+
+        return [extract_metadata(reference) for reference in references]

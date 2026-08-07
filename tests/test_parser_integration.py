@@ -35,7 +35,11 @@ def test_parse_references_pipeline(tmp_path):
             "Method",
             "Results",
             "References",
-            "Smith, J. (2020). Example article.",
+            (
+                "Smith, J. (2020). "
+                "Example article. "
+                "https://doi.org/10.1234/example"
+            ),
             "Jones, A. (2021). Another article.",
             "Appendix",
             "Extra material.",
@@ -48,6 +52,12 @@ def test_parse_references_pipeline(tmp_path):
 
     assert len(references) == 2
 
-    assert references[0].raw_text == "Smith, J. (2020). Example article."
+    assert references[0].year == 2020
+
+    assert references[0].doi == "10.1234/example"
+
+    assert references[0].raw_text == (
+        "Smith, J. (2020). " "Example article. " "https://doi.org/10.1234/example"
+    )
 
     assert references[1].raw_text == "Jones, A. (2021). Another article."
