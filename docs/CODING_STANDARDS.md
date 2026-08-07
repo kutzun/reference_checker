@@ -1,6 +1,6 @@
 Document: CODING_STANDARDS.md
 Version: 1.0
-Status: Draft
+Status: Freeze
 Last Updated: 2026-08-07
 Author: Kutay Uzun
 
