@@ -61,3 +61,19 @@ def test_missing_metadata():
     assert result.year is None
     assert result.doi is None
     assert result.url is None
+
+
+def test_extract_authors_and_title():
+    reference = Reference(
+        raw_text=(
+            "Smith, J. (2020). "
+            "The impact of writing instruction. "
+            "Journal of Writing Research."
+        )
+    )
+
+    result = extract_metadata(reference)
+
+    assert result.authors == ["Smith, J."]
+
+    assert result.title == "The impact of writing instruction"

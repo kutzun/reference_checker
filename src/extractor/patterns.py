@@ -5,9 +5,7 @@ Regular expression patterns used for reference metadata extraction.
 import re
 
 # Four-digit publication year (1900-2099)
-YEAR_PATTERN = re.compile(
-    r"\b(19|20)\d{2}\b"
-)
+YEAR_PATTERN = re.compile(r"\b(19|20)\d{2}\b")
 
 
 # DOI pattern following common DOI formats

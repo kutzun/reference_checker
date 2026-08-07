@@ -11,6 +11,10 @@ from .patterns import (
     find_url,
     find_year,
 )
+from .text_metadata import (
+    extract_authors,
+    extract_title,
+)
 
 
 def extract_metadata(
@@ -29,10 +33,16 @@ def extract_metadata(
         Updated Reference object.
     """
 
-    reference.year = find_year(reference.raw_text)
+    text = reference.raw_text
 
-    reference.doi = find_doi(reference.raw_text)
+    reference.year = find_year(text)
 
-    reference.url = find_url(reference.raw_text)
+    reference.doi = find_doi(text)
+
+    reference.url = find_url(text)
+
+    reference.authors = extract_authors(text)
+
+    reference.title = extract_title(text)
 
     return reference
