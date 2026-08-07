@@ -3,18 +3,18 @@ name = "reference-checker"
 version = "0.1.0"
 description = "Desktop application for verifying bibliographic references in DOCX manuscripts."
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 authors = [
     { name = "Kutay Uzun" }
 ]
 
 [tool.black]
 line-length = 88
-target-version = ["py313"]
+target-version = ["py312"]
 
 [tool.ruff]
 line-length = 88
-target-version = "py313"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = [
