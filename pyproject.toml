@@ -8,6 +8,9 @@ authors = [
     { name = "Kutay Uzun" }
 ]
 
+[project.scripts]
+reference-checker = "cli.main:main"
+
 [tool.black]
 line-length = 88
 target-version = ["py312"]
@@ -46,3 +49,12 @@ source = [
 [tool.coverage.report]
 show_missing = true
 skip_covered = false
+
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+
+[tool.setuptools.packages.find]
+where = ["src"]

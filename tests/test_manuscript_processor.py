@@ -6,7 +6,7 @@ from pathlib import Path
 
 from docx import Document
 
-from pipeline.manuscript import (
+from workflow.manuscript import (
     ManuscriptProcessor,
 )
 

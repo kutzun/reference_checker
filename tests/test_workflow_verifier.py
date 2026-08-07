@@ -6,7 +6,7 @@ from models import (
     Reference,
     VerificationStatus,
 )
-from pipeline.verifier import (
+from workflow.verifier import (
     ManuscriptVerifier,
 )
 

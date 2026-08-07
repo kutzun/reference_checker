@@ -1,3 +1,0 @@
-"""
-Pipeline package.
-"""
