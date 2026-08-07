@@ -6,3 +6,5 @@ reportlab
 pytest
 black
 ruff
+
+python-docx
