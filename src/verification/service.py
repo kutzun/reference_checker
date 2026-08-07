@@ -6,6 +6,12 @@ Coordinates reference verification across providers.
 
 from datetime import datetime
 
+from cache.cache import (
+    VerificationCache,
+)
+from cache.serialization import (
+    result_to_dict,
+)
 from models import (
     Reference,
     VerificationEvidence,
@@ -13,6 +19,7 @@ from models import (
     VerificationStatus,
 )
 
+from .matcher import ReferenceMatcher
 from .provider import VerificationProvider
 
 
@@ -24,56 +31,101 @@ class VerificationService:
     def __init__(
         self,
         providers: list[VerificationProvider],
+        matcher: ReferenceMatcher | None = None,
+        cache: VerificationCache | None = None,
     ):
         """
         Initialize verification service.
-
-        Args:
-            providers:
-                Available verification providers.
         """
 
         self.providers = providers
+
+        self.matcher = matcher if matcher is not None else ReferenceMatcher()
+
+        self.cache = cache
 
     def verify(
         self,
         reference: Reference,
     ) -> VerificationResult:
         """
-        Verify a reference using available providers.
-
-        Args:
-            reference:
-                Reference to verify.
-
-        Returns:
-            Verification result.
+        Verify a reference.
         """
+
+        cache_key = reference.raw_text
+
+        if self.cache:
+
+            cached = self.cache.get(cache_key)
+
+            if cached:
+
+                return VerificationResult(
+                    status=VerificationStatus(cached["status"]),
+                    confidence=cached["confidence"],
+                    explanation=cached["explanation"],
+                    warnings=cached["warnings"],
+                )
 
         evidence = VerificationEvidence(
             verification_time=datetime.now(),
         )
 
-        for provider in self.providers:
-            matches = provider.search(reference)
+        best_score = 0.0
 
-            for match in matches:
-                evidence.add_match(match)
+        for provider in self.providers:
+
+            matches = provider.search(reference)
 
             if matches:
                 evidence.add_provider(provider.name)
 
-        if evidence.matches:
-            return VerificationResult(
+            for match in matches:
+
+                score = self.matcher.score(
+                    reference,
+                    match,
+                )
+
+                best_score = max(
+                    best_score,
+                    score,
+                )
+
+                evidence.add_match(match)
+
+        if best_score >= 0.80:
+
+            result = VerificationResult(
                 status=VerificationStatus.VERIFIED,
-                confidence=1.0,
+                confidence=best_score,
                 evidence=evidence,
-                explanation=("Reference matched by " "verification provider."),
+                explanation=("Reference matched " "with high confidence."),
             )
 
-        return VerificationResult(
-            status=VerificationStatus.NOT_FOUND,
-            confidence=0.0,
-            evidence=evidence,
-            explanation=("No matching reference found."),
-        )
+        elif evidence.matches:
+
+            result = VerificationResult(
+                status=VerificationStatus.MANUAL_REVIEW,
+                confidence=best_score,
+                evidence=evidence,
+                explanation=("Potential match requires " "review."),
+            )
+
+        else:
+
+            result = VerificationResult(
+                status=VerificationStatus.NOT_FOUND,
+                confidence=0.0,
+                evidence=evidence,
+                explanation=("No matching reference found."),
+            )
+
+        if self.cache:
+
+            self.cache.set(
+                cache_key,
+                result_to_dict(result),
+            )
+
+        return result
