@@ -2,10 +2,8 @@
 Builds Reference objects from bibliography entries.
 """
 
-from extractor.patterns import (
-    find_doi,
-    find_url,
-    find_year,
+from extractor.metadata import (
+    extract_metadata,
 )
 from models import (
     Reference,
@@ -32,17 +30,20 @@ class ReferenceParser:
             Parsed references.
         """
 
-        references = []
+        references: list[Reference] = []
 
         for entry in entries:
 
+            reference = Reference(
+                raw_text=entry,
+            )
+
+            reference = extract_metadata(
+                reference,
+            )
+
             references.append(
-                Reference(
-                    raw_text=entry,
-                    year=find_year(entry),
-                    doi=find_doi(entry),
-                    url=find_url(entry),
-                )
+                reference,
             )
 
         return references
