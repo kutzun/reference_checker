@@ -1,0 +1,8 @@
+python-docx
+requests
+openpyxl
+reportlab
+
+pytest
+black
+ruff
