@@ -26,7 +26,16 @@ class Reference:
 
     title: str | None = None
     journal: str | None = None
+
+    # Book and chapter metadata
+    book_title: str | None = None
+    editors: list[str] = field(default_factory=list)
+
     publisher: str | None = None
+    publisher_location: str | None = None
+
+    isbn: str | None = None
+    edition: str | None = None
 
     year: int | None = None
     volume: str | None = None
@@ -43,7 +52,18 @@ class Reference:
         Returns:
             True if DOI exists, otherwise False.
         """
+
         return bool(self.doi)
+
+    def has_isbn(self) -> bool:
+        """
+        Check whether the reference contains an ISBN.
+
+        Returns:
+            True if ISBN exists, otherwise False.
+        """
+
+        return bool(self.isbn)
 
     def has_minimum_metadata(self) -> bool:
         """
@@ -52,4 +72,10 @@ class Reference:
         Returns:
             True if the reference has basic searchable information.
         """
-        return bool(self.title or self.doi)
+
+        return bool(
+            self.title
+            or self.book_title
+            or self.doi
+            or self.isbn
+        )

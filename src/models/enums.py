@@ -40,7 +40,8 @@ class Provider(StrEnum):
     """
 
     CROSSREF = "crossref"
-    OPENALEX = "openalex"
+    SEMANTIC_SCHOLAR = "semantic_scholar"
+    OPENLIBRARY = "openlibrary"
     CACHE = "cache"
 
 

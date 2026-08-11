@@ -1,0 +1,89 @@
+{
+  "summary": {
+    "total": 13,
+    "verified": 7,
+    "manual_review": 6,
+    "failed": 0,
+    "average_confidence": 0.780747821150298
+  },
+  "references": [
+    {
+      "title": "Defining and operationalising L2 complexity",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null
+    },
+    {
+      "title": "Advances in Readability Research: A New Readability Web App for English",
+      "status": "manual_review",
+      "confidence": 0.7272727272727273,
+      "search_url": "https://www.google.com/search?q=Automated%20Readability%20Web%20App%20for%20English"
+    },
+    {
+      "title": "Microfeatures influencing writing quality: the case of Chinese students’ SAT essays",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null
+    },
+    {
+      "title": "A Computational Analysis of Textual Features and L2 Writing Proficiency",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null
+    },
+    {
+      "title": "The ICNALE Guide",
+      "status": "manual_review",
+      "confidence": 0.44444444444444436,
+      "search_url": "https://www.google.com/search?q=The%20ICNALE%20edited%20essays%3B%20A%20dataset%20for%20analysis%20of%20L2%20English%20learner%20essays%20based%20on%20a%20new%20integrative%20viewpoint"
+    },
+    {
+      "title": "Testing ESL composition",
+      "status": "manual_review",
+      "confidence": 0.75,
+      "search_url": "https://www.google.com/search?q=Testing%20ESL%20Composition%3A%20A%20Practical%20Approach"
+    },
+    {
+      "title": "MEASURING LONGITUDINAL WRITING DEVELOPMENT USING INDICES OF SYNTACTIC COMPLEXITY AND SOPHISTICATION",
+      "status": "manual_review",
+      "confidence": 0.6710526315789473,
+      "search_url": "https://www.google.com/search?q=Measuring%20syntactic%20development%20in%20L2%20writing%3A%20Fine%20grained%20indices%20of%20syntactic%20complexity%20and%20usage-based%20indices%20of%20syntactic%20sophistication%20%28Unpublished%20Doctoral%20Dissertation%29"
+    },
+    {
+      "title": "Automatic analysis of syntactic complexity in second language writing",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null
+    },
+    {
+      "title": "Syntactic Complexity Measures and their Relationship to L2 Proficiency: A Research Synthesis of College-level L2 Writing",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null
+    },
+    {
+      "title": "Syntactic complexity revisited: sensitivity of China’s AES-generated scores to syntactic measures, effects of discourse-mode and topic",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null
+    },
+    {
+      "title": "A Coh-Metrix Analysis of Elementary School English Textbooks",
+      "status": "manual_review",
+      "confidence": 0.22058823529411764,
+      "search_url": "https://www.google.com/search?q=Variation%20in%20Assessment%3A%20A%20Coh-Metrix%20Analysis%20of%20Evaluation%20of%20Written%20English%20in%20the%20Swedish%20Upper%20Secondary%20School"
+    },
+    {
+      "title": "Revisiting the predictive power of traditional vs. fine-grained syntactic complexity indices for L2 writing quality: The case of two genres",
+      "status": "manual_review",
+      "confidence": 0.33636363636363636,
+      "search_url": "https://www.google.com/search?q=Prediction%20of%20low%20L2%20writing%20performance%20using%20syntactic%20complexity%20indices"
+    },
+    {
+      "title": "Beyond Differences: Assessing Effects of Shared Linguistic Features on L2 Writing Quality of Two Genres",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null
+    }
+  ]
+}

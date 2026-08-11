@@ -30,6 +30,8 @@ class VerificationResult:
 
     warnings: list[str] = field(default_factory=list)
 
+    search_url: str | None = None
+
     def is_verified(self) -> bool:
         """
         Check whether the reference was successfully verified.

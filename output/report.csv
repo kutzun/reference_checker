@@ -1,0 +1,21 @@
+metric,value
+total,13
+verified,7
+manual_review,6
+failed,0
+average_confidence,0.780747821150298
+
+title,status,confidence,search_url
+Defining and operationalising L2 complexity,verified,1.0,
+Advances in Readability Research: A New Readability Web App for English,manual_review,0.7272727272727273,https://www.google.com/search?q=Automated%20Readability%20Web%20App%20for%20English
+Microfeatures influencing writing quality: the case of Chinese students’ SAT essays,verified,1.0,
+A Computational Analysis of Textual Features and L2 Writing Proficiency,verified,1.0,
+The ICNALE Guide,manual_review,0.44444444444444436,https://www.google.com/search?q=The%20ICNALE%20edited%20essays%3B%20A%20dataset%20for%20analysis%20of%20L2%20English%20learner%20essays%20based%20on%20a%20new%20integrative%20viewpoint
+Testing ESL composition,manual_review,0.75,https://www.google.com/search?q=Testing%20ESL%20Composition%3A%20A%20Practical%20Approach
+MEASURING LONGITUDINAL WRITING DEVELOPMENT USING INDICES OF SYNTACTIC COMPLEXITY AND SOPHISTICATION,manual_review,0.6710526315789473,https://www.google.com/search?q=Measuring%20syntactic%20development%20in%20L2%20writing%3A%20Fine%20grained%20indices%20of%20syntactic%20complexity%20and%20usage-based%20indices%20of%20syntactic%20sophistication%20%28Unpublished%20Doctoral%20Dissertation%29
+Automatic analysis of syntactic complexity in second language writing,verified,1.0,
+Syntactic Complexity Measures and their Relationship to L2 Proficiency: A Research Synthesis of College-level L2 Writing,verified,1.0,
+"Syntactic complexity revisited: sensitivity of China’s AES-generated scores to syntactic measures, effects of discourse-mode and topic",verified,1.0,
+A Coh-Metrix Analysis of Elementary School English Textbooks,manual_review,0.22058823529411764,https://www.google.com/search?q=Variation%20in%20Assessment%3A%20A%20Coh-Metrix%20Analysis%20of%20Evaluation%20of%20Written%20English%20in%20the%20Swedish%20Upper%20Secondary%20School
+Revisiting the predictive power of traditional vs. fine-grained syntactic complexity indices for L2 writing quality: The case of two genres,manual_review,0.33636363636363636,https://www.google.com/search?q=Prediction%20of%20low%20L2%20writing%20performance%20using%20syntactic%20complexity%20indices
+Beyond Differences: Assessing Effects of Shared Linguistic Features on L2 Writing Quality of Two Genres,verified,1.0,

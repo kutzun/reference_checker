@@ -45,4 +45,10 @@ def extract_metadata(
 
     reference.title = extract_title(text)
 
+    print("-----")
+    print(reference.authors)
+    print(reference.title)
+    print(reference.year)
+    print(reference.doi)
+
     return reference

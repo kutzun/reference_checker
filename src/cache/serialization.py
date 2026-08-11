@@ -19,4 +19,5 @@ def result_to_dict(
         "confidence": result.confidence,
         "explanation": result.explanation,
         "warnings": result.warnings,
+        "search_url": result.search_url,
     }

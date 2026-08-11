@@ -43,16 +43,16 @@ def test_verification_evidence():
     evidence = VerificationEvidence()
 
     match = ReferenceMatch(
-        provider=Provider.OPENALEX,
+        provider=Provider.CROSSREF,        # Changed from OPENALEX
         overall_score=0.85,
     )
 
     evidence.add_match(match)
-    evidence.add_provider(Provider.OPENALEX)
+    evidence.add_provider(Provider.CROSSREF)  # Changed from OPENALEX
 
     assert len(evidence.matches) == 1
     assert evidence.best_match() == match
-    assert Provider.OPENALEX in evidence.providers_checked
+    assert Provider.CROSSREF in evidence.providers_checked   # Updated assertion
 
 
 def test_verification_result():
