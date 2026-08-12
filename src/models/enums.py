@@ -18,6 +18,7 @@ class VerificationStatus(StrEnum):
     FAILED = "failed"
     SKIPPED = "skipped"
     NOT_PROCESSED = "not_processed"
+    NOT_FOUND = "not_found"
 
 
 class ReferenceType(StrEnum):

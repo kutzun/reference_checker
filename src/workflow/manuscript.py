@@ -41,6 +41,10 @@ class ManuscriptProcessor:
         """
         Extract references from DOCX.
 
+        Only returns entries that contain at least a title or a book title.
+        This prevents non‑reference text (code, appendix headings, etc.)
+        from being passed to the verification pipeline.
+
         Args:
             file_path:
                 Manuscript path.
@@ -53,4 +57,13 @@ class ManuscriptProcessor:
 
         entries = parser.extract_reference_section()
 
-        return self.reference_parser.parse(entries)
+        all_refs = self.reference_parser.parse(entries)
+
+        # Discard entries without any usable title – they are almost
+        # certainly not real bibliographic references.
+        filtered = [
+            ref for ref in all_refs
+            if ref.title or ref.book_title
+        ]
+
+        return filtered

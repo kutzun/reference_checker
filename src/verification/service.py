@@ -79,12 +79,13 @@ class VerificationService:
 
                 evidence.add_match(match)
 
-        # 3. Generate manual search link if not verified -----------------------
+        # 3. Generate manual search link (phrase search with quotes) -----------
         search_url = None
         if best_score < 0.80:
-            query = reference.title or reference.raw_text
-            if query:
-                search_url = f"https://www.google.com/search?q={quote(query)}"
+            title = reference.title or reference.raw_text
+            if title:
+                # Wrap the title in double quotes for exact phrase search
+                search_url = f"https://www.google.com/search?q={quote(f'\"{title}\"')}"
 
         # 4. Determine final status --------------------------------------------
         if best_score >= 0.80:
@@ -93,7 +94,7 @@ class VerificationService:
                 confidence=best_score,
                 evidence=evidence,
                 explanation="Reference matched with high confidence.",
-                search_url=search_url,      # will be None if verified
+                search_url=search_url,      # will be None
             )
         elif evidence.matches:
             result = VerificationResult(

@@ -1,21 +1,33 @@
 metric,value
-total,13
-verified,7
-manual_review,6
+total,25
+verified,3
+manual_review,22
 failed,0
-average_confidence,0.780747821150298
+average_confidence,0.48906684981684984
 
 title,status,confidence,search_url
-Defining and operationalising L2 complexity,verified,1.0,
-Advances in Readability Research: A New Readability Web App for English,manual_review,0.7272727272727273,https://www.google.com/search?q=Automated%20Readability%20Web%20App%20for%20English
-Microfeatures influencing writing quality: the case of Chinese students’ SAT essays,verified,1.0,
-A Computational Analysis of Textual Features and L2 Writing Proficiency,verified,1.0,
-The ICNALE Guide,manual_review,0.44444444444444436,https://www.google.com/search?q=The%20ICNALE%20edited%20essays%3B%20A%20dataset%20for%20analysis%20of%20L2%20English%20learner%20essays%20based%20on%20a%20new%20integrative%20viewpoint
-Testing ESL composition,manual_review,0.75,https://www.google.com/search?q=Testing%20ESL%20Composition%3A%20A%20Practical%20Approach
-MEASURING LONGITUDINAL WRITING DEVELOPMENT USING INDICES OF SYNTACTIC COMPLEXITY AND SOPHISTICATION,manual_review,0.6710526315789473,https://www.google.com/search?q=Measuring%20syntactic%20development%20in%20L2%20writing%3A%20Fine%20grained%20indices%20of%20syntactic%20complexity%20and%20usage-based%20indices%20of%20syntactic%20sophistication%20%28Unpublished%20Doctoral%20Dissertation%29
-Automatic analysis of syntactic complexity in second language writing,verified,1.0,
-Syntactic Complexity Measures and their Relationship to L2 Proficiency: A Research Synthesis of College-level L2 Writing,verified,1.0,
-"Syntactic complexity revisited: sensitivity of China’s AES-generated scores to syntactic measures, effects of discourse-mode and topic",verified,1.0,
-A Coh-Metrix Analysis of Elementary School English Textbooks,manual_review,0.22058823529411764,https://www.google.com/search?q=Variation%20in%20Assessment%3A%20A%20Coh-Metrix%20Analysis%20of%20Evaluation%20of%20Written%20English%20in%20the%20Swedish%20Upper%20Secondary%20School
-Revisiting the predictive power of traditional vs. fine-grained syntactic complexity indices for L2 writing quality: The case of two genres,manual_review,0.33636363636363636,https://www.google.com/search?q=Prediction%20of%20low%20L2%20writing%20performance%20using%20syntactic%20complexity%20indices
-Beyond Differences: Assessing Effects of Shared Linguistic Features on L2 Writing Quality of Two Genres,verified,1.0,
+Şeyh Hasan Haydar Divanı (İnceleme- Tenkidli Metin),manual_review,0.06944444444444443,https://www.google.com/search?q=%22%C3%87engn%C3%A2me%3A%20%C4%B0nceleme-Tenkidli%20Metin%22
+"ÇENGNAME'DE MUSİKÎ TERİMLERİ (Perde, Nağme, Makam, Seyir, Şube, Terkip, Avaz)",manual_review,0.7,https://www.google.com/search?q=%22%C3%87engname%27de%20Musik%C3%AE%20Terimleri%20%28Perde%2C%20Na%C4%9Fme%2C%20Makam%2C%20Seyir%2C%20%C5%9Eube%2C%20Terkip%2C%20Avaz%29%22
+Safiyyüddîn-i Urmevî ve Şerefiyye Risâlesi,manual_review,0.625,https://www.google.com/search?q=%22Safiyy%C3%BCdd%C3%AEn-i%20Urmev%C3%AE%20ve%20%C5%9Eerefiyye%20Ris%C3%A2lesi%22
+Maragalı Abdülkadir,manual_review,0.23333333333333334,https://www.google.com/search?q=%22Maragal%C4%B1%20Abd%C3%BClkadir%3A%20XV.%20yy.%20Bestecisi%20ve%20M%C3%BCzik%20Nazariyat%C3%A7%C4%B1s%C4%B1n%C4%B1n%20Hayat%20Hik%C3%A2yesiyle%20Eserleri%20%C3%9Czerine%20Bir%20%C3%87al%C4%B1%C5%9Fma%22
+"Ahmed-i Dâ'î, hayati ve eserleri [hazirliyan] Ismail Hikmet Ertaylan",manual_review,0.4,https://www.google.com/search?q=%22Ahmed-i%20D%C3%A2%27%C3%AE%3A%20Hayat%C4%B1%20ve%20Eserleri%22
+From Rumi to the Whirling Dervishes,manual_review,0.7285714285714286,https://www.google.com/search?q=%22From%20Rumi%20to%20the%20Whirling%20Dervishes%3A%20Music%22
+Music of the Ottoman Court,manual_review,0.45,https://www.google.com/search?q=%22Composition%20and%20the%20Early%20Ottoman%20Instrumental%20Repertoire%22
+Türk Mûsikîsinde Usûl-Vezin Münasebeti,manual_review,0.25,https://www.google.com/search?q=%22T%C3%BCrk%20M%C3%BBsik%C3%AEsinde%20Makam%22
+Kitabu 'İlmi'l-Musiki'ala vechi'l-Hurufat = Musikiyi harflerle tesbit ve icra ilminin kitabı,manual_review,0.35625,https://www.google.com/search?q=%22Kit%C3%A2bu%20%27%C4%B0lmi%27l-M%C3%BBsik%C3%AE%20al%C3%A2%20vechi%27l-hur%C3%BBf%C3%A2t%3A%20M%C3%BBsik%C3%AEyi%20Harflerle%20Tesbit%20ve%20%C4%B0cr%C3%A2%20%C4%B0lminin%20Kitab%C4%B1%22
+Sufi ve Siir - Osmanli Tasavvuf Siirinin Poetikasi,manual_review,0.2833333333333333,https://www.google.com/search?q=%22S%C3%BBf%C3%AE%20ve%20%C5%9Eiir%3A%20Osmanl%C4%B1%20Tasavvuf%20%C5%9Eiirinin%20Poetikas%C4%B1%22
+Türk musikisinde makamlar,manual_review,0.7,https://www.google.com/search?q=%22T%C3%BCrk%20Musikisinde%20Makamlar%22
+Eski Turk Edebiyatinda Mazmunlar ve Izahi,manual_review,0.5833333333333333,https://www.google.com/search?q=%22Eski%20T%C3%BCrk%20Edebiyat%C4%B1nda%20Mazmunlar%20ve%20%C4%B0zah%C4%B1%22
+"Makam, Âvâze, Şûbe ve Terkib: Osmanlı Musiki Nazariyatında Pisagorcu ""Kürelerin Uyumu / Musikisi"" Anlayışının Temsili",manual_review,0.75,https://www.google.com/search?q=%22Makam%2C%20%C3%82v%C3%A2ze%2C%20%C5%9E%C3%BBbe%20ve%20Terkib%3A%20Osmanl%C4%B1%20Musiki%20Nazariyat%C4%B1nda%20Pisagorcu%20%27K%C3%BCrelerin%20Uyumu/Musikisi%27%20Anlay%C4%B1%C5%9F%C4%B1n%C4%B1n%20Temsili%22
+PEÇEVİ TARİHİNDE MAKAM VE KURUM ADLARI,manual_review,0.125,https://www.google.com/search?q=%22Makam%C4%B1%20Anlamak%3A%20Makam%20Nazariyat%20Tarihinde%20Ba%C5%9Fl%C4%B1ca%20Modeller%22
+Meanings in Turkish musical culture,verified,0.8500000000000001,
+Müzik terimleri sözlüğü,manual_review,0.41666666666666663,https://www.google.com/search?q=%22M%C3%BCzik%20S%C3%B6zl%C3%BC%C4%9F%C3%BC%22
+Sayıların gizemi,verified,1.0,
+TÜRK MUSİKİSİNDE III. SELİM VE UNUTULMUŞ BİR MAKAM: ŞEVK-İ DİL MAKAMI,manual_review,0.14423076923076922,https://www.google.com/search?q=%22Makam%3A%20T%C3%BCrk%20Sanat%20Musikisinde%20Makam%20Uygulamas%C4%B1%22
+Türk mûsıkı̂sinin mes'eleleri,manual_review,0.6000000000000001,https://www.google.com/search?q=%22T%C3%BCrk%20M%C3%BBs%C4%B1k%C3%AEsinin%20Mes%27eleleri%22
+Türkçe sözlük,manual_review,0.625,https://www.google.com/search?q=%22T%C3%BCrk%C3%A7e%20S%C3%B6zl%C3%BCk%22
+Safiyyüddin el-Hilli’nin Şiirlerinde Hiciv,manual_review,0.125,https://www.google.com/search?q=%22Safiyy%C3%BCddin%20Abd%C3%BClm%C3%BCmin%22
+Bedî‘iyyât Şiirlerinin İki Önemli İsmi: Safiyyüddin el-Hillî ve İbn Câbir el-Endelüsî,manual_review,0.08928571428571427,https://www.google.com/search?q=%22Safiyy%C3%BCddin%20Abd%C3%BClm%C3%BC%27min%20Urmev%C3%AE%20ve%20Kitab%C3%BC%27l-Edv%C3%A2r%C4%B1%22
+"The modal system of Arab and Persian music, A.D. 1250-1300",manual_review,0.7,https://www.google.com/search?q=%22The%20Modal%20System%20of%20Arab%20and%20Persian%20Music%22
+‘Abd al-Qādir al-Marāghī and ‘Alī b. Muḥammad Binā'ī: two fifteenth-century examples of notation. Part 1: Text,verified,0.8500000000000001,
+A preliminary version of the<i>kitāb al-Adwār</i>,manual_review,0.5722222222222222,https://www.google.com/search?q=%22A%20Preliminary%20Version%20of%20the%20Kit%C4%81b%20al-Adw%C4%81r%22
