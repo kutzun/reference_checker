@@ -1,161 +1,291 @@
 {
   "summary": {
-    "total": 25,
-    "verified": 3,
-    "manual_review": 22,
+    "total": 40,
+    "verified": 16,
+    "manual_review": 24,
     "failed": 0,
-    "average_confidence": 0.48906684981684984
+    "average_confidence": 0.685818449186048
   },
   "references": [
+    {
+      "title": "The episodic buffer: a new component of working memory?",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "Baddeley, A. (2000). The episodic buffer: a new component of working memory?. Trends in cognitive sciences, 4(11), 417-423.https://doi.org/10.1016/S1364-6613(00)01538-2"
+    },
+    {
+      "title": "Working Memory and Language",
+      "status": "manual_review",
+      "confidence": 0.41666666666666663,
+      "search_url": "https://www.google.com/search?q=%22Working%20memory%20and%20language%3A%20An%20overview%22",
+      "raw_text": "Baddeley, A. (2003). Working memory and language: An overview. Journal of Communication Disorders, 36(3), 189-208. https://doi.org/10.1016/S0021-9924(03)00019-4"
+    },
+    {
+      "title": "10. Working Memory, Cognitive Resources and L2 Writing Performance",
+      "status": "manual_review",
+      "confidence": 0.37499999999999994,
+      "search_url": "https://www.google.com/search?q=%22Working%20memory%20capacity%20and%20L2%20writing%20performance%22",
+      "raw_text": "Bergsleithner, J. M. (2010). Working memory capacity and L2 writing performance. Ciências & Cognição, 15, 2-20."
+    },
+    {
+      "title": "Should We Use Characteristics of Conversation to Measure Grammatical Complexity in L2 Writing Development?\n                           *",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "Biber, D., Gray, B., & Poonpon, K. (2011). Should we use characteristics of conversation to measure grammatical complexity in L2 writing development?. TESOL Quarterly, 45(1), 5-35. https://doi.org/10.5054/tq.2011.244483"
+    },
+    {
+      "title": "How Many Participants Do We Have to Include in Properly Powered Experiments? A Tutorial of Power Analysis with Reference Tables",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "Brysbaert, M. (2019) How many participants do we have to include in properly powered experiments? A tutorial of power analysis with reference tables. Journal of Cognition, 2(1), 16, 1–38. https://doi.org/10.5334/joc.72"
+    },
+    {
+      "title": "The efficacy of various kinds of error feedback for improvement in the accuracy and fluency of L2 student writing",
+      "status": "manual_review",
+      "confidence": 0.7,
+      "search_url": "https://www.google.com/search?q=%22The%20efficacy%20of%20various%20kinds%20of%20error%20feedback%20for%20improvement%20in%20the%20accuracy%20and%20fluency%20of%20L2%20student%20writing%22",
+      "raw_text": "Chandler, J. (2003). The efficacy of various kinds of error feedback for improvement in the accuracy and fluency of L2 student writing. Journal of Second Language Writing, 12, 267–296, http://dx.doi.org/10.1016/S1060-3743(03)00038-9"
+    },
+    {
+      "title": "The Effects of Writing Strategy Instruction on EFL Learners’ Writing Development",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "Chen, A. H. (2022). The Effects of Writing Strategy Instruction on EFL Learners' Writing Development. English Language Teaching, 15(3), 29-37. https://doi.org/10.5539/elt.v15n3p29"
+    },
+    {
+      "title": "Decoding different working memory states during an operation span task from prefrontal fNIRS signals",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "Chen, T., Zhao, C., Pan, X., Qu, J., Wei, J., Li, C., ... & Zhang, X. (2021). Decoding different working memory states during an operation span task from prefrontal fNIRS signals. Biomedical Optics Express, 12(6), 3495-3511. https://doi.org/10.1364/BOE.426731"
+    },
+    {
+      "title": "A measure of second language writing anxiety: Scale development and preliminary validation",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "Cheng, Y. S. (2004). A measure of second language writing anxiety: Scale development and preliminary validation. Journal of Second Language Writing, 13, 313–315. https://doi.org/10.1016/j.jslw.2004.07.001"
+    },
+    {
+      "title": "The Role of Working Memory on Writing Processes",
+      "status": "verified",
+      "confidence": 0.925,
+      "search_url": null,
+      "raw_text": "De Vita, F., Schmidt, S., Tinti, C., & Re, A. M. (2021). The Role of Working Memory on Writing Processes. Frontiers in Psychology, 12, 738395. https://doi.org/10.3389/fpsyg.2021.738395"
+    },
+    {
+      "title": "Automaticity and automatization",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "DeKeyser, R. (2001). Automaticity and automatization. In P. Robinson (Ed.), Cognition and Second Language Instruction (pp. 125-151). Cambridge University Press. https://doi.org/10.1017/CBO9781139524780.007"
+    },
+    {
+      "title": "Planning and Task Performance in a Second Language",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "Ellis, R. (2005). Planning and task performance in a second language. John Benjamins. https://doi.org/10.1075/lllt.11"
+    },
+    {
+      "title": "The Differential Effects of Three Types of Task Planning on the Fluency, Complexity, and Accuracy in L2 Oral Production",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "Ellis, R. (2009). The differential effects of three types of task planning on the fluency, complexity, and accuracy in L2 oral production. Applied Linguistics, 30(4), 474-509. https://doi.org/10.1093/applin/amp042"
+    },
+    {
+      "title": "Analyzing Self-Repair: An Alternative Way of Language Assessment",
+      "status": "manual_review",
+      "confidence": 0.2222222222222222,
+      "search_url": "https://www.google.com/search?q=%22Analyzing%20learner%20language%22",
+      "raw_text": "Ellis, R., & Barkhuizen, G. (2005). Analyzing learner language. Oxford University Press."
+    },
+    {
+      "title": "Online Assessment Challenges: Validity, Practicality and Reliability",
+      "status": "manual_review",
+      "confidence": 0.3076923076923077,
+      "search_url": "https://www.google.com/search?q=%22Measures%20of%20written%20linguistic%20accuracy%3A%20Questions%20of%20reliability%2C%20validity%2C%20and%20practicality%22",
+      "raw_text": "Evans, N., Hartshorn, K. J., Cox, T. & Martin, T. (2014) Measures of written linguistic accuracy: Questions of reliability, validity, and practicality. Journal of Second Language Writing, 24, 33-50. http://dx.doi.org/10.1016/j.jslw.2014.02.005"
+    },
+    {
+      "title": "Capturing Accuracy in Second Language Performance: The Case for a Weighted Clause Ratio",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "Foster, P., & Wigglesworth, G. (2016). Capturing accuracy in second language performance: The case for a weighted clause ratio. Annual Review of Applied Linguistics, 36, 98-116. https://doi.org/10.1017/S0267190515000082"
+    },
+    {
+      "title": "The Role of Self-Regulation and Transcription Skills in Writing and Writing Development",
+      "status": "verified",
+      "confidence": 0.9090909090909092,
+      "search_url": null,
+      "raw_text": "Graham, S., & Harris, K. R. (2000). The role of self-regulation and transcription processes in writing development. Educational Psychologist, 35(1), 3-13. https://doi.org/10.1207/S15326985EP3501_2"
+    },
+    {
+      "title": "Learners’ processes during pre-task planning and Working Memory Capacity",
+      "status": "manual_review",
+      "confidence": 0.7,
+      "search_url": "https://www.google.com/search?q=%22Learners%27%20processes%20during%20pre-task%20planning%20and%20working%20memory%20capacity%22",
+      "raw_text": "Guará-Tavares, M. G. (2016). Learners' processes during pre-task planning and working memory capacity. Ilha do Desterro, 69(1), 79-93. https://doi.org/10.5007/2175-8026.2016v69n1p79"
+    },
+    {
+      "title": "Topical knowledge and ESL writing",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "He, L., & Shi, L. (2012). Topical knowledge and ESL writing. Language Testing, 29(3), 443-464. https://doi.org/10.1177/0265532212436659"
+    },
+    {
+      "title": "Lexical errors in Korean-Australian heritage learners’ compositions",
+      "status": "manual_review",
+      "confidence": 0.2403846153846154,
+      "search_url": "https://www.google.com/search?q=%22An%20analysis%20of%20lexical%20errors%20in%20the%20English%20compositions%20of%20Thai%20learners%22",
+      "raw_text": "Hemchua, S., & Schmitt, N. (2006). An analysis of lexical errors in the English compositions of Thai learners. Prospect, 21(3). 3-25."
+    },
+    {
+      "title": "Dimensions of L2 performance and proficiency",
+      "status": "manual_review",
+      "confidence": 0.4230769230769231,
+      "search_url": "https://www.google.com/search?q=%22Complexity%2C%20accuracy%20and%20fluency%20in%20second%20language%20acquisition%22",
+      "raw_text": "Housen, A., & Kuiken, F. (2009). Complexity, accuracy and fluency in second language acquisition. Applied Linguistics, 30(4), 461–473. https://doi.org/10.1093/applin/amp048"
+    },
+    {
+      "title": "Cognitive task complexity and L2 written syntactic complexity, accuracy, lexical complexity, and fluency: A research synthesis and meta-analysis",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "Johnson, M. D. (2017). Cognitive task complexity and L2 written syntactic complexity, accuracy, lexical complexity, and fluency: A research synthesis and meta-analysis. Journal of Second Language Writing, 37, 13-38. https://doi.org/10.1016/j.jslw.2017.06.001"
+    },
+    {
+      "title": "The effect of planning sub-processes on L2 writing fluency, grammatical complexity, and lexical complexity",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "Johnson, M. D., Mercado, L., & Acevedo, A. (2012). The effect of planning sub-processes on L2 writing fluency, grammatical complexity, and lexical complexity. Journal of Second Language Writing, 21(3), 264-282.  https://doi.org/10.1016/j.jslw.2012.05.011"
+    },
+    {
+      "title": "A critique of the working memory model",
+      "status": "manual_review",
+      "confidence": 0.5555555555555556,
+      "search_url": "https://www.google.com/search?q=%22A%20model%20of%20working%20memory%20in%20writing%22",
+      "raw_text": "Kellogg, R. T. (1996). A model of working memory in writing. In C. M. Levy & S. Ransdell (Ed.), The science of writing: Theories, methods, individual differences, and applications (pp. 57-71). Lawrence Erlbaum Associates."
+    },
+    {
+      "title": "Long-term working memory in text production",
+      "status": "manual_review",
+      "confidence": 0.765625,
+      "search_url": "https://www.google.com/search?q=%22Components%20of%20working%20memory%20in%20text%20production%22",
+      "raw_text": "Kellogg, R. T. (1999). Components of working memory in text production. In Torrance, M & G.C. Geffery (Eds.), The cognitive demands of writing. Amsterdam University Press."
+    },
+    {
+      "title": "THE INTERSECTION OF TASK-BASED INTERACTION, TASK COMPLEXITY, AND WORKING MEMORY",
+      "status": "manual_review",
+      "confidence": 0.763157894736842,
+      "search_url": "https://www.google.com/search?q=%22The%20Intersection%20of%20Task-Based%20Interaction%2C%20Task%20Complexity%2C%20and%20Working%20Memory%3A%20L2%20Question%20Development%20through%20Recasts%20in%20a%20Laboratory%20Setting%22",
+      "raw_text": "Kim, Y. J., Payant, C., & Pearson, P. (2015). The Intersection of Task-Based Interaction, Task Complexity, and Working Memory: L2 Question Development through Recasts in a Laboratory Setting. Studies in Second Language Acquisition, 37(3), 549-581. https://doi.org/10.1017/S0272263114000618"
+    },
+    {
+      "title": "Task complexity and linguistic and discourse features of narrative writing performance",
+      "status": "verified",
+      "confidence": 1.0,
+      "search_url": null,
+      "raw_text": "Kormos, J. (2011). Task complexity and linguistic and discourse features of narrative writing performance. Journal of Second Language Writing, 20(2), 148-161. https://doi.org/10.1016/j.jslw.2011.02.001"
+    },
     {
       "title": "Şeyh Hasan Haydar Divanı (İnceleme- Tenkidli Metin)",
       "status": "manual_review",
       "confidence": 0.06944444444444443,
-      "search_url": "https://www.google.com/search?q=%22%C3%87engn%C3%A2me%3A%20%C4%B0nceleme-Tenkidli%20Metin%22"
+      "search_url": "https://www.google.com/search?q=%22%C3%87engn%C3%A2me%3A%20%C4%B0nceleme-Tenkidli%20Metin%22",
+      "raw_text": "Ahmed-i Dâ'î, Çengnâme: İnceleme-Tenkidli Metin, haz. Gönül Alpay Tekin, Harvard Üniversitesi Yakındoğu Dilleri ve Medeniyetleri Bölümü, Cambridge 1992."
     },
     {
       "title": "ÇENGNAME'DE MUSİKÎ TERİMLERİ (Perde, Nağme, Makam, Seyir, Şube, Terkip, Avaz)",
       "status": "manual_review",
       "confidence": 0.7,
-      "search_url": "https://www.google.com/search?q=%22%C3%87engname%27de%20Musik%C3%AE%20Terimleri%20%28Perde%2C%20Na%C4%9Fme%2C%20Makam%2C%20Seyir%2C%20%C5%9Eube%2C%20Terkip%2C%20Avaz%29%22"
+      "search_url": "https://www.google.com/search?q=%22%C3%87engname%27de%20Musik%C3%AE%20Terimleri%20%28Perde%2C%20Na%C4%9Fme%2C%20Makam%2C%20Seyir%2C%20%C5%9Eube%2C%20Terkip%2C%20Avaz%29%22",
+      "raw_text": "Alpay, Gönül, \"Çengname'de Musikî Terimleri (Perde, Nağme, Makam, Seyir, Şube, Terkip, Avaz)\", Araştırma: Ankara Üniversitesi Dil ve Tarih-Coğrafya Fakültesi Felsefe Bölümü Dergisi, Sayı 10, 1972, s. 83-97."
     },
     {
       "title": "Safiyyüddîn-i Urmevî ve Şerefiyye Risâlesi",
       "status": "manual_review",
       "confidence": 0.625,
-      "search_url": "https://www.google.com/search?q=%22Safiyy%C3%BCdd%C3%AEn-i%20Urmev%C3%AE%20ve%20%C5%9Eerefiyye%20Ris%C3%A2lesi%22"
+      "search_url": "https://www.google.com/search?q=%22Safiyy%C3%BCdd%C3%AEn-i%20Urmev%C3%AE%20ve%20%C5%9Eerefiyye%20Ris%C3%A2lesi%22",
+      "raw_text": "Arslan, Fazlı, Safiyyüddîn-i Urmevî ve Şerefiyye Risâlesi, 2. bs., Atatürk Kültür Merkezi Başkanlığı, Ankara 2017."
     },
     {
       "title": "Maragalı Abdülkadir",
       "status": "manual_review",
       "confidence": 0.23333333333333334,
-      "search_url": "https://www.google.com/search?q=%22Maragal%C4%B1%20Abd%C3%BClkadir%3A%20XV.%20yy.%20Bestecisi%20ve%20M%C3%BCzik%20Nazariyat%C3%A7%C4%B1s%C4%B1n%C4%B1n%20Hayat%20Hik%C3%A2yesiyle%20Eserleri%20%C3%9Czerine%20Bir%20%C3%87al%C4%B1%C5%9Fma%22"
+      "search_url": "https://www.google.com/search?q=%22Maragal%C4%B1%20Abd%C3%BClkadir%3A%20XV.%20yy.%20Bestecisi%20ve%20M%C3%BCzik%20Nazariyat%C3%A7%C4%B1s%C4%B1n%C4%B1n%20Hayat%20Hik%C3%A2yesiyle%20Eserleri%20%C3%9Czerine%20Bir%20%C3%87al%C4%B1%C5%9Fma%22",
+      "raw_text": "Bardakçı, Murat, Maragalı Abdülkadir: XV. yy. Bestecisi ve Müzik Nazariyatçısının Hayat Hikâyesiyle Eserleri Üzerine Bir Çalışma, Pan Yayıncılık, İstanbul 1986."
     },
     {
       "title": "Ahmed-i Dâ'î, hayati ve eserleri [hazirliyan] Ismail Hikmet Ertaylan",
       "status": "manual_review",
       "confidence": 0.4,
-      "search_url": "https://www.google.com/search?q=%22Ahmed-i%20D%C3%A2%27%C3%AE%3A%20Hayat%C4%B1%20ve%20Eserleri%22"
+      "search_url": "https://www.google.com/search?q=%22Ahmed-i%20D%C3%A2%27%C3%AE%3A%20Hayat%C4%B1%20ve%20Eserleri%22",
+      "raw_text": "Ertaylan, İsmail Hikmet, Ahmed-i Dâ'î: Hayatı ve Eserleri, Üçler Basımevi, İstanbul 1952."
     },
     {
       "title": "From Rumi to the Whirling Dervishes",
       "status": "manual_review",
       "confidence": 0.7285714285714286,
-      "search_url": "https://www.google.com/search?q=%22From%20Rumi%20to%20the%20Whirling%20Dervishes%3A%20Music%22"
+      "search_url": "https://www.google.com/search?q=%22From%20Rumi%20to%20the%20Whirling%20Dervishes%3A%20Music%22",
+      "raw_text": "Feldman, Walter, From Rumi to the Whirling Dervishes: Music, Poetry, and Mysticism in the Ottoman Empire, Edinburgh University Press, Edinburgh 2022."
     },
     {
       "title": "Music of the Ottoman Court",
       "status": "manual_review",
       "confidence": 0.45,
-      "search_url": "https://www.google.com/search?q=%22Composition%20and%20the%20Early%20Ottoman%20Instrumental%20Repertoire%22"
+      "search_url": "https://www.google.com/search?q=%22Composition%20and%20the%20Early%20Ottoman%20Instrumental%20Repertoire%22",
+      "raw_text": "Feldman, Walter, Music of the Ottoman Court: Makam, Composition and the Early Ottoman Instrumental Repertoire, Brill, Leiden 2024."
     },
     {
       "title": "Türk Mûsikîsinde Usûl-Vezin Münasebeti",
       "status": "manual_review",
       "confidence": 0.25,
-      "search_url": "https://www.google.com/search?q=%22T%C3%BCrk%20M%C3%BBsik%C3%AEsinde%20Makam%22"
+      "search_url": "https://www.google.com/search?q=%22T%C3%BCrk%20M%C3%BBsik%C3%AEsinde%20Makam%22",
+      "raw_text": "Kaçar, Gülçin Yahya, \"Türk Mûsikîsinde Makam\", İstem, Cilt 6, Sayı 11, 2008, s. 145-158."
     },
     {
       "title": "Kitabu 'İlmi'l-Musiki'ala vechi'l-Hurufat = Musikiyi harflerle tesbit ve icra ilminin kitabı",
       "status": "manual_review",
       "confidence": 0.35625,
-      "search_url": "https://www.google.com/search?q=%22Kit%C3%A2bu%20%27%C4%B0lmi%27l-M%C3%BBsik%C3%AE%20al%C3%A2%20vechi%27l-hur%C3%BBf%C3%A2t%3A%20M%C3%BBsik%C3%AEyi%20Harflerle%20Tesbit%20ve%20%C4%B0cr%C3%A2%20%C4%B0lminin%20Kitab%C4%B1%22"
+      "search_url": "https://www.google.com/search?q=%22Kit%C3%A2bu%20%27%C4%B0lmi%27l-M%C3%BBsik%C3%AE%20al%C3%A2%20vechi%27l-hur%C3%BBf%C3%A2t%3A%20M%C3%BBsik%C3%AEyi%20Harflerle%20Tesbit%20ve%20%C4%B0cr%C3%A2%20%C4%B0lminin%20Kitab%C4%B1%22",
+      "raw_text": "Kantemiroğlu, Kitâbu 'İlmi'l-Mûsikî alâ vechi'l-hurûfât: Mûsikîyi Harflerle Tesbit ve İcrâ İlminin Kitabı, haz. Yalçın Tura, Yapı Kredi Yayınları, İstanbul 2001."
     },
     {
       "title": "Sufi ve Siir - Osmanli Tasavvuf Siirinin Poetikasi",
       "status": "manual_review",
       "confidence": 0.2833333333333333,
-      "search_url": "https://www.google.com/search?q=%22S%C3%BBf%C3%AE%20ve%20%C5%9Eiir%3A%20Osmanl%C4%B1%20Tasavvuf%20%C5%9Eiirinin%20Poetikas%C4%B1%22"
+      "search_url": "https://www.google.com/search?q=%22S%C3%BBf%C3%AE%20ve%20%C5%9Eiir%3A%20Osmanl%C4%B1%20Tasavvuf%20%C5%9Eiirinin%20Poetikas%C4%B1%22",
+      "raw_text": "Kılıç, Mahmud Erol, Sûfî ve Şiir: Osmanlı Tasavvuf Şiirinin Poetikası, Sufi Kitap, İstanbul 2017."
     },
     {
       "title": "Türk musikisinde makamlar",
       "status": "manual_review",
       "confidence": 0.7,
-      "search_url": "https://www.google.com/search?q=%22T%C3%BCrk%20Musikisinde%20Makamlar%22"
+      "search_url": "https://www.google.com/search?q=%22T%C3%BCrk%20Musikisinde%20Makamlar%22",
+      "raw_text": "Kutluğ, Yakup Fikret, Türk Musikisinde Makamlar, Yapı Kredi Yayınları, İstanbul 2000."
     },
     {
       "title": "Eski Turk Edebiyatinda Mazmunlar ve Izahi",
       "status": "manual_review",
       "confidence": 0.5833333333333333,
-      "search_url": "https://www.google.com/search?q=%22Eski%20T%C3%BCrk%20Edebiyat%C4%B1nda%20Mazmunlar%20ve%20%C4%B0zah%C4%B1%22"
+      "search_url": "https://www.google.com/search?q=%22Eski%20T%C3%BCrk%20Edebiyat%C4%B1nda%20Mazmunlar%20ve%20%C4%B0zah%C4%B1%22",
+      "raw_text": "Onay, Ahmet Talat, Eski Türk Edebiyatında Mazmunlar ve İzahı, haz. Cemâl Kurnaz, Akçağ Yayınları, Ankara 2000."
     },
     {
       "title": "Makam, Âvâze, Şûbe ve Terkib: Osmanlı Musiki Nazariyatında Pisagorcu \"Kürelerin Uyumu / Musikisi\" Anlayışının Temsili",
       "status": "manual_review",
       "confidence": 0.75,
-      "search_url": "https://www.google.com/search?q=%22Makam%2C%20%C3%82v%C3%A2ze%2C%20%C5%9E%C3%BBbe%20ve%20Terkib%3A%20Osmanl%C4%B1%20Musiki%20Nazariyat%C4%B1nda%20Pisagorcu%20%27K%C3%BCrelerin%20Uyumu/Musikisi%27%20Anlay%C4%B1%C5%9F%C4%B1n%C4%B1n%20Temsili%22"
-    },
-    {
-      "title": "PEÇEVİ TARİHİNDE MAKAM VE KURUM ADLARI",
-      "status": "manual_review",
-      "confidence": 0.125,
-      "search_url": "https://www.google.com/search?q=%22Makam%C4%B1%20Anlamak%3A%20Makam%20Nazariyat%20Tarihinde%20Ba%C5%9Fl%C4%B1ca%20Modeller%22"
-    },
-    {
-      "title": "Meanings in Turkish musical culture",
-      "status": "verified",
-      "confidence": 0.8500000000000001,
-      "search_url": null
-    },
-    {
-      "title": "Müzik terimleri sözlüğü",
-      "status": "manual_review",
-      "confidence": 0.41666666666666663,
-      "search_url": "https://www.google.com/search?q=%22M%C3%BCzik%20S%C3%B6zl%C3%BC%C4%9F%C3%BC%22"
-    },
-    {
-      "title": "Sayıların gizemi",
-      "status": "verified",
-      "confidence": 1.0,
-      "search_url": null
-    },
-    {
-      "title": "TÜRK MUSİKİSİNDE III. SELİM VE UNUTULMUŞ BİR MAKAM: ŞEVK-İ DİL MAKAMI",
-      "status": "manual_review",
-      "confidence": 0.14423076923076922,
-      "search_url": "https://www.google.com/search?q=%22Makam%3A%20T%C3%BCrk%20Sanat%20Musikisinde%20Makam%20Uygulamas%C4%B1%22"
-    },
-    {
-      "title": "Türk mûsıkı̂sinin mes'eleleri",
-      "status": "manual_review",
-      "confidence": 0.6000000000000001,
-      "search_url": "https://www.google.com/search?q=%22T%C3%BCrk%20M%C3%BBs%C4%B1k%C3%AEsinin%20Mes%27eleleri%22"
-    },
-    {
-      "title": "Türkçe sözlük",
-      "status": "manual_review",
-      "confidence": 0.625,
-      "search_url": "https://www.google.com/search?q=%22T%C3%BCrk%C3%A7e%20S%C3%B6zl%C3%BCk%22"
-    },
-    {
-      "title": "Safiyyüddin el-Hilli’nin Şiirlerinde Hiciv",
-      "status": "manual_review",
-      "confidence": 0.125,
-      "search_url": "https://www.google.com/search?q=%22Safiyy%C3%BCddin%20Abd%C3%BClm%C3%BCmin%22"
-    },
-    {
-      "title": "Bedî‘iyyât Şiirlerinin İki Önemli İsmi: Safiyyüddin el-Hillî ve İbn Câbir el-Endelüsî",
-      "status": "manual_review",
-      "confidence": 0.08928571428571427,
-      "search_url": "https://www.google.com/search?q=%22Safiyy%C3%BCddin%20Abd%C3%BClm%C3%BC%27min%20Urmev%C3%AE%20ve%20Kitab%C3%BC%27l-Edv%C3%A2r%C4%B1%22"
-    },
-    {
-      "title": "The modal system of Arab and Persian music, A.D. 1250-1300",
-      "status": "manual_review",
-      "confidence": 0.7,
-      "search_url": "https://www.google.com/search?q=%22The%20Modal%20System%20of%20Arab%20and%20Persian%20Music%22"
-    },
-    {
-      "title": "‘Abd al-Qādir al-Marāghī and ‘Alī b. Muḥammad Binā'ī: two fifteenth-century examples of notation. Part 1: Text",
-      "status": "verified",
-      "confidence": 0.8500000000000001,
-      "search_url": null
-    },
-    {
-      "title": "A preliminary version of the<i>kitāb al-Adwār</i>",
-      "status": "manual_review",
-      "confidence": 0.5722222222222222,
-      "search_url": "https://www.google.com/search?q=%22A%20Preliminary%20Version%20of%20the%20Kit%C4%81b%20al-Adw%C4%81r%22"
+      "search_url": "https://www.google.com/search?q=%22Makam%2C%20%C3%82v%C3%A2ze%2C%20%C5%9E%C3%BBbe%20ve%20Terkib%3A%20Osmanl%C4%B1%20Musiki%20Nazariyat%C4%B1nda%20Pisagorcu%20%27K%C3%BCrelerin%20Uyumu/Musikisi%27%20Anlay%C4%B1%C5%9F%C4%B1n%C4%B1n%20Temsili%22",
+      "raw_text": "Öztürk, Okan Murat, \"Makam, Âvâze, Şûbe ve Terkib: Osmanlı Musiki Nazariyatında Pisagorcu 'Kürelerin Uyumu/Musikisi' Anlayışının Temsili\", Rast Müzikoloji Dergisi, Cilt 2, Sayı 1, 2014, s. 1-49."
     }
   ]
 }

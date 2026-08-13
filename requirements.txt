@@ -8,3 +8,4 @@ black
 ruff
 
 python-docx
+nicegui>=1.4
