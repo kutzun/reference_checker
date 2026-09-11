@@ -164,4 +164,4 @@ Kutay Uzun
 This project uses metadata provided by:
 
 - Crossref
-- OpenAlex
+- OpenLibrary
