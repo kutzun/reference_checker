@@ -1,0 +1,1 @@
+"""Internal consistency check for citations and references."""
