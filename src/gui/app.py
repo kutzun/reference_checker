@@ -705,6 +705,10 @@ def main():
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: {COLORS['text']};
         }}
+        * {{
+            user-select: text !important;
+            -webkit-user-select: text !important;
+        }}
         .q-tab {{
             font-weight: 500;
             color: {COLORS['text_light']} !important;
@@ -717,6 +721,59 @@ def main():
             background-color: {COLORS['primary']} !important;
         }}
     </style>
+    <script>
+    document.addEventListener('contextmenu', function(e) {{
+        e.preventDefault();
+        var old = document.getElementById('rc-ctx');
+        if (old) {{ old.remove(); }}
+
+        var menu = document.createElement('div');
+        menu.id = 'rc-ctx';
+        menu.style.cssText = 'position:fixed;z-index:99999;background:white;'
+            + 'border:1px solid #ccc;border-radius:6px;'
+            + 'box-shadow:0 4px 12px rgba(0,0,0,0.15);padding:6px 0;'
+            + 'font-size:14px;min-width:140px;font-family:Segoe UI,sans-serif;';
+
+        var sel = window.getSelection().toString();
+        var items = [];
+        if (sel) {{
+            items.push(['Copy', function() {{ document.execCommand('copy'); }}]);
+            items.push(['Cut',  function() {{ document.execCommand('cut'); }}]);
+        }}
+        items.push(['Paste', function() {{
+            if (navigator.clipboard && navigator.clipboard.readText) {{
+                navigator.clipboard.readText().then(function(t) {{
+                    var el = document.activeElement;
+                    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA'
+                               || el.isContentEditable)) {{
+                        document.execCommand('insertText', false, t);
+                    }}
+                }});
+            }}
+        }}]);
+        items.push(['Select All', function() {{ document.execCommand('selectAll'); }}]);
+
+        items.forEach(function(pair) {{
+            var el = document.createElement('div');
+            el.textContent = pair[0];
+            el.style.cssText = 'padding:6px 16px;cursor:pointer;';
+            el.onmouseenter = function() {{ el.style.background = '#f0f0f0'; }};
+            el.onmouseleave = function() {{ el.style.background = 'white'; }};
+            el.onclick = function() {{ pair[1](); menu.remove(); }};
+            menu.appendChild(el);
+        }});
+
+        document.body.appendChild(menu);
+        menu.style.left = e.pageX + 'px';
+        menu.style.top  = e.pageY + 'px';
+        setTimeout(function() {{
+            document.addEventListener('click', function close() {{
+                menu.remove();
+                document.removeEventListener('click', close);
+            }});
+        }}, 0);
+    }});
+    </script>
     """)
 
     with ui.header().style(
