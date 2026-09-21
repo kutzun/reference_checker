@@ -229,7 +229,9 @@ def extract_title(text: str) -> str | None:
             return _clean_title(title)
 
     # --- Pattern 6: catch-all after year, rejecting obvious page fragments -
-    match = re.search(r"\b(?:19|20)\d{2}[a-z]?\b[.,;]?\s*(.+?)\.(?=\s|$)", text)
+    # Accepts both "YEAR. Title." and "(YEAR). Title." forms when the title
+    # is the last fragment in the string.
+    match = re.search(r"\b(?:19|20)\d{2}[a-z]?\b\)?[.,;]?\s*(.+?)\.(?=\s|$)", text)
     if match:
         title = match.group(1).strip()
         if not _is_likely_page_fragment(title):
