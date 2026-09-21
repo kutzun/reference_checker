@@ -788,7 +788,6 @@ def main():
     def on_tab_change(e):
         if e.value == "Editor":
             build_editor_page()
-            ui.timer(0.2, lambda: resize_grid(), once=True)
     tabs.on_value_change(on_tab_change)
 
     with ui.footer().style(
