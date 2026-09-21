@@ -328,9 +328,11 @@ async def run_verification_bg(refs: list[Reference]):
         build_results_page(report)
         if state["progress_label"]:
             state["progress_label"].set_text("Verification complete.")
-        ui.notify("Verification complete.", type="positive")
+        with state["results_container"]:
+            ui.notify("Verification complete.", type="positive")
     except Exception as e:
-        ui.notify(f"Verification failed: {e}", type="negative")
+        with state["results_container"]:
+            ui.notify(f"Verification failed: {e}", type="negative")
         if state["progress_label"]:
             state["progress_label"].set_text("Verification failed.")
     finally:
