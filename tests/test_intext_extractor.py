@@ -212,3 +212,31 @@ def test_generic_profile_still_extracts_parenthetical():
     cites = ex.extract(["(Smith, 2020)"])
     assert len(cites) == 1
     assert cites[0].authors == ["Smith"]
+
+def test_eg_prefix_is_stripped():
+    ex = InTextExtractor(ENGLISH)
+    cites = ex.extract(["(e.g. Kyle & Crossley, 2018)"])
+    assert len(cites) == 1
+    assert cites[0].authors == ["Kyle", "Crossley"]
+    assert cites[0].year == 2018
+
+
+def test_ie_prefix_is_stripped():
+    ex = InTextExtractor(ENGLISH)
+    cites = ex.extract(["(i.e. Smith, 2020)"])
+    assert len(cites) == 1
+    assert cites[0].authors == ["Smith"]
+
+
+def test_also_prefix_is_stripped():
+    ex = InTextExtractor(ENGLISH)
+    cites = ex.extract(["(also Smith, 2020)"])
+    assert len(cites) == 1
+    assert cites[0].authors == ["Smith"]
+
+
+def test_but_see_prefix_is_stripped():
+    ex = InTextExtractor(ENGLISH)
+    cites = ex.extract(["(but see Smith, 2020)"])
+    assert len(cites) == 1
+    assert cites[0].authors == ["Smith"]
