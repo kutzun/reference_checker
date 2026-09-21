@@ -295,9 +295,13 @@ def _is_likely_publisher_or_translator(text: str) -> bool:
     return False
 
 
-def _clean_title(title: str) -> str:
-    """Remove leading stray punctuation like ')' that may have been captured."""
+def _clean_title(title: str) -> str | None:
+    """Remove leading stray punctuation like ')' that may have been captured.
+
+    Returns ``None`` if nothing meaningful remains, so callers can fall
+    through to their own ``None`` return instead of handing back ``""``.
+    """
     title = title.strip()
     if title.startswith(')'):
         title = title[1:].strip()
-    return title
+    return title or None
