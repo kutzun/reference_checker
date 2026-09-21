@@ -18,6 +18,10 @@ from models import Reference
 from verification.runner import verify_references
 from report.exporter import ReportExporter
 
+from internal_check.service import InternalCheckService
+from internal_check.profiles import ENGLISH, TURKISH, GENERIC
+from internal_check.models import IssueType
+
 COLORS = {
     "primary": "#243f90",
     "secondary": "#cb9932",
@@ -45,6 +49,12 @@ state: dict[str, Any] = {
     "editor_rows": [],
     "editor_grid": None,
     "source_map": {},      # raw_text -> source filename
+    "internal_check_result": None,
+    "internal_check_profile": "en",
+    "internal_check_container": None,
+    "internal_check_file_name": "",
+    "internal_check_results_container": None,
+    "uploaded_files": [],       # list of {"name": str, "bytes": bytes}
 }
 
 tabs_ref: Optional[ui.tabs] = None
@@ -63,6 +73,8 @@ async def handle_upload_multi(event):
 
     if not files:
         return
+
+    state["uploaded_files"] = []
 
     status_label.set_text("Processing files...")
     ui.notify(f"Received {len(files)} file(s). Extracting references...", type="info")
@@ -107,6 +119,7 @@ async def handle_upload_multi(event):
 
         # Get original filename
         file_name = getattr(upload_item, 'name', 'unknown.docx')
+        state["uploaded_files"].append({"name": file_name, "bytes": file_bytes})
 
         try:
             processor = ManuscriptProcessor()
@@ -315,9 +328,11 @@ async def run_verification_bg(refs: list[Reference]):
         build_results_page(report)
         if state["progress_label"]:
             state["progress_label"].set_text("Verification complete.")
-        ui.notify("Verification complete.", type="positive")
+        with state["results_container"]:
+            ui.notify("Verification complete.", type="positive")
     except Exception as e:
-        ui.notify(f"Verification failed: {e}", type="negative")
+        with state["results_container"]:
+            ui.notify(f"Verification failed: {e}", type="negative")
         if state["progress_label"]:
             state["progress_label"].set_text("Verification failed.")
     finally:
@@ -437,6 +452,211 @@ async def download_report(report: dict):
     except Exception as e:
         ui.notify(f"Failed to generate report: {e}", type="negative")
 
+# -------- Internal Check page -------------------------------------------
+def run_internal_check():
+    """Run the internal consistency check on the uploaded manuscript."""
+    if state.get("internal_check_running"):
+        return
+
+    files = state.get("uploaded_files", [])
+    if not files:
+        ui.notify("Please upload a manuscript first (Upload tab).", type="warning")
+        return
+
+    file_data = files[0]
+    file_name = file_data["name"]
+    file_bytes = file_data["bytes"]
+
+    profile_map = {"en": ENGLISH, "tr": TURKISH, "generic": GENERIC}
+    profile = profile_map.get(state["internal_check_profile"], ENGLISH)
+
+    # Use editor references if the user has reviewed them; otherwise fresh parse.
+    refs = None
+    if state.get("editor_rows"):
+        refs = []
+        for row in state["editor_rows"]:
+            authors = (
+                [a.strip() for a in row["authors"].split(";") if a.strip()]
+                if row["authors"] else []
+            )
+            title = row["title"] or None
+            year = int(row["year"]) if row["year"].isdigit() else None
+            raw_text = row["raw_text"] or ""
+            refs.append(
+                Reference(
+                    raw_text=raw_text,
+                    title=title,
+                    authors=authors,
+                    year=year,
+                )
+            )
+
+    state["internal_check_running"] = True
+    ui.notify("Running internal check...", type="info")
+
+    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".docx")
+    temp_file.write(file_bytes)
+    temp_file.close()
+    temp_path = Path(temp_file.name)
+
+    try:
+        service = InternalCheckService(profile=profile)
+        if refs is not None:
+            result = service.check_docx_with_references(temp_path, refs)
+        else:
+            result = service.check_docx(temp_path)
+        state["internal_check_result"] = result
+        state["internal_check_file_name"] = file_name
+        _refresh_internal_check_results()
+        ui.notify("Internal check complete.", type="positive")
+    except Exception as e:
+        ui.notify(f"Internal check failed: {e}", type="negative")
+    finally:
+        temp_path.unlink(missing_ok=True)
+        state["internal_check_running"] = False
+
+
+def build_internal_check_page():
+    """Render the Internal Check tab from current state."""
+    container = state.get("internal_check_container")
+    if container is None:
+        return
+    container.clear()
+
+    with container:
+        ui.label("Internal Consistency Check").style(
+            f"font-size: 1.8rem; font-weight: bold; color: {COLORS['primary']};"
+        )
+        ui.label(
+            "Verify that every in-text citation has a reference and every "
+            "reference is cited in text."
+        ).style(f"color: {COLORS['text_light']}; margin-bottom: 0.5rem;")
+        ui.space()
+
+        with ui.row().classes("items-center gap-4"):
+            label_to_key = {"English": "en", "Turkish": "tr", "Generic": "generic"}
+            key_to_label = {v: k for k, v in label_to_key.items()}
+            ui.select(
+                options=list(label_to_key.keys()),
+                value=key_to_label.get(state["internal_check_profile"], "English"),
+                label="Language Profile",
+                on_change=lambda e: state.update(
+                    {"internal_check_profile": label_to_key.get(e.value, "en")}
+                ),
+            ).classes("min-w-[220px]")
+            ui.button(
+                "Run Internal Check",
+                on_click=run_internal_check,
+            ).props("push color='secondary' text-color=white")
+            if state.get("editor_rows"):
+                ui.label("Using edited references from the Editor tab.").style(
+                    f"color: {COLORS['success']}; font-size: 0.85rem;"
+                )
+            else:
+                ui.label("No edited references. Will extract from the DOCX.").style(
+                    f"color: {COLORS['text_light']}; font-size: 0.85rem;"
+                )
+
+        ui.space()
+
+        # Results live in their own child container, so refreshing them
+        # does not destroy the controls above.
+        results_container = ui.column().classes("w-full")
+        state["internal_check_results_container"] = results_container
+        _render_results_into(results_container)
+
+
+def _render_results_into(results_container):
+    """Render the current result (if any) into the given container."""
+    with results_container:
+        result = state.get("internal_check_result")
+        if result is None:
+            ui.label(
+                "No check has been run yet. Upload a manuscript, then click Run."
+            ).style(f"color: {COLORS['text_light']}; margin-top: 1rem;")
+        else:
+            render_internal_check_results(result)
+
+
+def _refresh_internal_check_results():
+    """Rebuild only the results area; leave the controls intact."""
+    results_container = state.get("internal_check_results_container")
+    if results_container is None:
+        return
+    results_container.clear()
+    _render_results_into(results_container)
+
+
+def render_internal_check_results(result):
+    """Render summary cards and issue tables for a completed check."""
+    summary = result.summary
+
+    with ui.row().classes("justify-center gap-4 flex-wrap"):
+        cards = [
+            ("Citations", summary.get("citations_found", 0), COLORS["primary"]),
+            ("References", summary.get("references_found", 0), COLORS["primary"]),
+            ("Missing", summary.get("missing_references", 0), COLORS["danger"]),
+            ("Uncited", summary.get("uncited_references", 0), COLORS["warning"]),
+        ]
+        for label, value, color in cards:
+            with ui.card().style(
+                f"background-color: {COLORS['card_bg']}; border-radius: 12px; "
+                f"box-shadow: 0 2px 12px rgba(0,0,0,0.08); min-width: 120px; padding: 1rem;"
+            ):
+                ui.label(str(value)).style(
+                    f"font-size: 2.2rem; font-weight: bold; color: {color}; text-align: center;"
+                )
+                ui.label(label).style(
+                    f"color: {COLORS['text_light']}; text-align: center; font-size: 0.85rem;"
+                )
+
+    ui.space()
+
+    missing = result.missing_references()
+    uncited = result.uncited_references()
+
+    if missing:
+        ui.label("Missing References").style(
+            f"font-size: 1.4rem; font-weight: bold; color: {COLORS['danger']}; margin-top: 1rem;"
+        )
+        rows = []
+        for issue in missing:
+            c = issue.citation
+            rows.append({
+                "citation": c.raw if c else "",
+                "location": c.location if c and c.location else "",
+                "message": issue.message,
+            })
+        ui.table(
+            columns=[
+                {"name": "citation", "label": "Citation", "field": "citation", "align": "left"},
+                {"name": "location", "label": "Location", "field": "location", "align": "left"},
+                {"name": "message", "label": "Detail", "field": "message", "align": "left"},
+            ],
+            rows=rows,
+        ).classes("w-full").style("border-radius: 8px; overflow: hidden;")
+
+    if uncited:
+        ui.label("Uncited References").style(
+            f"font-size: 1.4rem; font-weight: bold; color: {COLORS['warning']}; margin-top: 1.5rem;"
+        )
+        rows = []
+        for issue in uncited:
+            ref = issue.reference
+            text = ref.raw_text[:160] if ref and ref.raw_text else issue.message
+            rows.append({"reference": text, "message": issue.message})
+        ui.table(
+            columns=[
+                {"name": "reference", "label": "Reference", "field": "reference", "align": "left"},
+                {"name": "message", "label": "Detail", "field": "message", "align": "left"},
+            ],
+            rows=rows,
+        ).classes("w-full").style("border-radius: 8px; overflow: hidden;")
+
+    if not missing and not uncited:
+        ui.label("All citations and references are consistent. 🎉").style(
+            f"color: {COLORS['success']}; font-weight: bold; margin-top: 1.5rem;"
+        )
 
 # -------- About page -----------------------------------------------------
 def build_about_page():
@@ -453,7 +673,7 @@ def build_about_page():
         ):
             ui.label("Software Information").style(f"font-weight: bold; color: {COLORS['primary']};")
             ui.separator()
-            ui.label("Reference Checker v1.0").style(f"color: {COLORS['text']};")
+            ui.label("Reference Checker v1.1").style(f"color: {COLORS['text']};")
             ui.label("A tool for verifying bibliographic references in academic manuscripts.").style(
                 f"color: {COLORS['text']};"
             )
@@ -485,6 +705,10 @@ def main():
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: {COLORS['text']};
         }}
+        * {{
+            user-select: text !important;
+            -webkit-user-select: text !important;
+        }}
         .q-tab {{
             font-weight: 500;
             color: {COLORS['text_light']} !important;
@@ -497,6 +721,59 @@ def main():
             background-color: {COLORS['primary']} !important;
         }}
     </style>
+    <script>
+    document.addEventListener('contextmenu', function(e) {{
+        e.preventDefault();
+        var old = document.getElementById('rc-ctx');
+        if (old) {{ old.remove(); }}
+
+        var menu = document.createElement('div');
+        menu.id = 'rc-ctx';
+        menu.style.cssText = 'position:fixed;z-index:99999;background:white;'
+            + 'border:1px solid #ccc;border-radius:6px;'
+            + 'box-shadow:0 4px 12px rgba(0,0,0,0.15);padding:6px 0;'
+            + 'font-size:14px;min-width:140px;font-family:Segoe UI,sans-serif;';
+
+        var sel = window.getSelection().toString();
+        var items = [];
+        if (sel) {{
+            items.push(['Copy', function() {{ document.execCommand('copy'); }}]);
+            items.push(['Cut',  function() {{ document.execCommand('cut'); }}]);
+        }}
+        items.push(['Paste', function() {{
+            if (navigator.clipboard && navigator.clipboard.readText) {{
+                navigator.clipboard.readText().then(function(t) {{
+                    var el = document.activeElement;
+                    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA'
+                               || el.isContentEditable)) {{
+                        document.execCommand('insertText', false, t);
+                    }}
+                }});
+            }}
+        }}]);
+        items.push(['Select All', function() {{ document.execCommand('selectAll'); }}]);
+
+        items.forEach(function(pair) {{
+            var el = document.createElement('div');
+            el.textContent = pair[0];
+            el.style.cssText = 'padding:6px 16px;cursor:pointer;';
+            el.onmouseenter = function() {{ el.style.background = '#f0f0f0'; }};
+            el.onmouseleave = function() {{ el.style.background = 'white'; }};
+            el.onclick = function() {{ pair[1](); menu.remove(); }};
+            menu.appendChild(el);
+        }});
+
+        document.body.appendChild(menu);
+        menu.style.left = e.pageX + 'px';
+        menu.style.top  = e.pageY + 'px';
+        setTimeout(function() {{
+            document.addEventListener('click', function close() {{
+                menu.remove();
+                document.removeEventListener('click', close);
+            }});
+        }}, 0);
+    }});
+    </script>
     """)
 
     with ui.header().style(
@@ -514,6 +791,7 @@ def main():
         ui.tab("Editor", icon="edit")
         ui.tab("Progress", icon="hourglass_empty")
         ui.tab("Results", icon="verified")
+        ui.tab("Internal Check", icon="rule")
         ui.tab("About", icon="info")
         tabs.value = "Upload"
 
@@ -558,6 +836,10 @@ def main():
         with ui.tab_panel("Results"):
             state["results_container"] = ui.column().classes("w-full")
 
+        with ui.tab_panel("Internal Check"):
+            state["internal_check_container"] = ui.column().classes("w-full")
+            build_internal_check_page()
+
         with ui.tab_panel("About"):
             build_about_page()
 
@@ -565,14 +847,13 @@ def main():
     def on_tab_change(e):
         if e.value == "Editor":
             build_editor_page()
-            ui.timer(0.2, lambda: resize_grid(), once=True)
     tabs.on_value_change(on_tab_change)
 
     with ui.footer().style(
         f"background-color: {COLORS['white']}; padding: 0.8rem; text-align: center; "
         f"color: {COLORS['text_light']}; font-size: 0.85rem; border-top: 1px solid #e0e0e0;"
     ):
-        ui.label("Reference Checker v1.0").style("margin: 0 auto;")
+        ui.label("Reference Checker v1.1").style("margin: 0 auto;")
 
 
 if __name__ in {"__main__", "__mp_main__"}:

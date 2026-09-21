@@ -19,7 +19,7 @@ _YEAR_RE = re.compile(
 # ---------------------------------------------------------------------------
 # Normalise author separators (Oxford comma, "and", "&")
 # ---------------------------------------------------------------------------
-_AND_AMPERSAND_RE = re.compile(r'\s*,?\s*(?:&|and)\s*')
+_AND_AMPERSAND_RE = re.compile(r'\s*,?\s*(?:\band\b|&)\s*')
 
 # Words that indicate a token is NOT an author name (editor, volume, etc.)
 _NON_AUTHOR_TOKENS = {
@@ -61,7 +61,12 @@ def _extract_last_first(author_block: str) -> List[str]:
         r"""
         (?:^|,\s*)                      # start or preceded by a comma
         (                               # group 1: full surname
-            [A-ZÀ-ÖØ-öø-ÿ]              # first letter upper/lower/accented
+            (?:                         # optional lowercase particles
+                [a-zà-öø-ÿ]             # particle starts lowercase
+                [A-Za-zÀ-ÖØ-öø-ÿ'`\-]*  # rest of particle (no spaces)
+                \s+
+            )*
+            [A-ZÀ-ÖØ-öø-ÿ]              # main surname first letter
             [A-Za-zÀ-ÖØ-öø-ÿ'`\- ]*?    # rest of surname (reluctant)
         )
         \s*,\s*                         # mandatory comma separator

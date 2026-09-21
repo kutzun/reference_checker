@@ -4,7 +4,7 @@ Reference Checker is a desktop application for verifying the accuracy and authen
 
 The software is designed for journal editors, editorial assistants, universities, and researchers who need to verify references quickly, consistently, and transparently.
 
-Version 1 focuses on deterministic, evidence-based verification using authoritative scholarly databases.
+Version 1.1 adds an internal consistency check that compares in-text citations against the reference list.
 
 ---
 
@@ -20,6 +20,29 @@ Version 1 focuses on deterministic, evidence-based verification using authoritat
 - Batch processing
 - Excel, CSV and PDF reports
 - Explainable verification decisions
+- Internal consistency check (citations ↔ references)
+
+---
+
+# Internal Check
+
+The Internal Check verifies the internal consistency of a manuscript: every in-text citation must appear in the reference list, and every entry in the reference list must be cited in text.
+
+Three citation styles are supported:
+
+- Parenthetical author-year: `(Smith, 2020)`, `(Smith & Jones, 2020)`, `(Smith et al., 2020; Jones, 2019)`
+- Narrative: `According to Smith (2020)`, `Smith (2020) argues`, `Smith (2020, p. 45)`
+- Numeric: `[1]`, `[1-3]`, `[1,3-5]`
+
+Statistical expressions such as `(M = 2.985; SD = 1.0345)` are recognized and ignored.
+
+Language profiles:
+
+- English
+- Turkish
+- Generic (language-independent)
+
+The Internal Check is available as a separate tab in the GUI. It runs locally, on the same DOCX you uploaded for verification, and produces a report of missing references and uncited references.
 
 ---
 

@@ -51,6 +51,30 @@ Expected impact on the project.
 # Decision Log
 
 ---
+## ADR-001: Internal check as a separate service
+
+**Date:** 2026-XX-XX
+
+**Status:** Accepted
+
+**Context:**
+The reference checker currently verifies references against external
+databases (Crossref, OpenLibrary). We need a new check that verifies
+internal consistency: every in-text citation must appear in the
+reference list, and every reference-list entry must be cited in text.
+
+**Decision:**
+The internal check will be implemented as a separate service under
+`src/internal_check/`, not integrated into the existing verification
+pipeline. The GUI will expose it via a new tab. The existing external
+verification pipeline remains unchanged.
+
+**Consequences:**
+- The internal check can be tested, versioned, and released independently.
+- The external verification output (`report.json`, `report.csv`) remains
+  backward-compatible. Internal-check results are added under a new key.
+- Language-specific citation patterns live in pluggable profiles under
+  `src/internal_check/profiles/`, not in the core matcher.
 
 ## DEC-001
 
