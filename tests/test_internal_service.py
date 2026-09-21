@@ -141,3 +141,23 @@ def test_unparsed_property_is_empty_when_all_clean():
     refs = [_ref("Smith 2020", ["Smith, J."], 2020)]
     service.check_text(body, refs)
     assert service.unparsed == []
+
+def test_check_docx_with_edited_references(tmp_path: Path):
+    """References supplied by the caller should be used as-is."""
+    path = tmp_path / "manuscript.docx"
+    doc = Document()
+    doc.add_paragraph("Introduction")
+    doc.add_paragraph("The effect was clear (Smith, 2020).")
+    doc.add_paragraph("References")
+    doc.add_paragraph("Smith, J. (2020). Example article.")
+    doc.save(path)
+
+    # Deliberately supply a WRONG reference list to confirm it is used.
+    supplied_refs = [_ref("Jones 2019", ["Jones, A."], 2019)]
+
+    service = InternalCheckService(profile=ENGLISH)
+    result = service.check_docx_with_references(path, supplied_refs)
+
+    # The citation is (Smith, 2020), the supplied list has only Jones 2019.
+    assert result.summary["missing_references"] == 1
+    assert result.summary["uncited_references"] == 1

@@ -75,6 +75,36 @@ class InternalCheckService:
 
         return self.matcher.match(citations, references)
 
+    def check_docx_with_references(
+        self,
+        file_path: Path,
+        references: list[Reference],
+    ) -> InternalCheckResult:
+        """
+        Run the internal check using a caller-supplied reference list.
+
+        Use this when the references have already been reviewed or
+        edited elsewhere (e.g. the GUI editor) and should not be
+        re-parsed from the DOCX.
+
+        Args:
+            file_path: Path to the DOCX file (used only for body text).
+            references: Parsed reference-list entries.
+
+        Returns:
+            An :class:`InternalCheckResult` with all issues.
+        """
+        docx_parser = DocxParser(file_path)
+        paragraphs = docx_parser.extract_paragraphs()
+        reference_start = find_reference_start(paragraphs)
+        if reference_start is None:
+            body_paragraphs = paragraphs
+        else:
+            body_paragraphs = paragraphs[:reference_start]
+
+        citations = self.extractor.extract(body_paragraphs)
+        return self.matcher.match(citations, references)
+
     def check_text(
         self,
         body_text: str,
