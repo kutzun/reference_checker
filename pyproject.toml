@@ -1,6 +1,6 @@
 [project]
 name = "reference-checker"
-version = "0.1.0"
+version = "1.1.0"
 description = "Desktop application for verifying bibliographic references in DOCX manuscripts."
 readme = "README.md"
 requires-python = ">=3.12"
