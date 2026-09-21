@@ -199,7 +199,17 @@ class ReportExporter:
         with path.open("w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow(["metric", "value"])
-            summary = report.get("summary", {})
+            # Accept two shapes:
+            #   1. A full detailed report with a nested "summary" key
+            #      (output of ReportGenerator.generate_detailed_report).
+            #   2. A flat summary dict (output of ReportGenerator.generate_summary).
+            summary = report.get("summary")
+            if summary is None:
+                summary = {
+                    k: v
+                    for k, v in report.items()
+                    if k != "references"
+                }
             for k, v in summary.items():
                 writer.writerow([k, v])
             writer.writerow([])
