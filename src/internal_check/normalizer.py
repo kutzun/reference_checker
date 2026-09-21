@@ -34,6 +34,15 @@ _TURKISH_FOLD = str.maketrans({
     "İ": "i",  # dotted uppercase  -> dotted lowercase
 })
 
+# Author name suffixes that should be stripped before comparison.
+# Matched only when they appear as a whole word at the end of the
+# surname, so "Van Dyke" and "Henry" are not affected. Roman numerals
+# are limited to those commonly used as suffixes; "XIV" and higher are
+# rare enough that we do not risk the false positives.
+_AUTHOR_SUFFIX_RE = re.compile(
+    r"\s+(jr|sr|ii|iii|iv|v|2nd|3rd|4th)$"
+)
+
 
 def _fold_case(text: str) -> str:
     """
@@ -94,6 +103,7 @@ def normalize_author_name(name: str) -> str:
     name = _fold_case(name)
     name = re.sub(r"[^\w\s]", " ", name, flags=re.UNICODE)
     name = re.sub(r"\s+", " ", name).strip()
+    name = _AUTHOR_SUFFIX_RE.sub("", name).strip()
     return name
 
 

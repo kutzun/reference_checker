@@ -240,3 +240,25 @@ def test_but_see_prefix_is_stripped():
     cites = ex.extract(["(but see Smith, 2020)"])
     assert len(cites) == 1
     assert cites[0].authors == ["Smith"]
+
+def test_jr_suffix_is_stripped():
+    """(Nelson, 2024) should match a reference with surname Nelson Jr."""
+    from internal_check.normalizer import normalize_author_name
+    assert normalize_author_name("Nelson Jr") == "nelson"
+    assert normalize_author_name("Nelson Jr.") == "nelson"
+    assert normalize_author_name("Smith Sr") == "smith"
+
+
+def test_roman_numeral_suffix_is_stripped():
+    from internal_check.normalizer import normalize_author_name
+    assert normalize_author_name("Smith II") == "smith"
+    assert normalize_author_name("Smith III") == "smith"
+    assert normalize_author_name("Smith IV") == "smith"
+
+
+def test_suffix_strip_does_not_touch_normal_names():
+    from internal_check.normalizer import normalize_author_name
+    assert normalize_author_name("Van Dyke") == "van dyke"
+    assert normalize_author_name("Henry") == "henry"
+    assert normalize_author_name("Smith") == "smith"
+    assert normalize_author_name("Kyle") == "kyle"
