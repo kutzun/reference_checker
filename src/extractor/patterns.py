@@ -79,6 +79,11 @@ def find_url(text: str) -> str | None:
     """
     Extract first URL from reference text.
 
+    Strips trailing sentence punctuation, since references commonly end
+    with the URL followed by a period ("...page.html."). Balanced
+    closing brackets are preserved, because Wikipedia and IMSLP URLs
+    legitimately end with ")".
+
     Args:
         text:
             Raw reference text.
@@ -92,7 +97,20 @@ def find_url(text: str) -> str | None:
     if match is None:
         return None
 
-    return match.group()
+    url = match.group()
+
+    pairs = {")": "(", "]": "[", "}": "{"}
+
+    while url:
+        last = url[-1]
+        if last in ".,;:":
+            url = url[:-1]
+        elif last in pairs and url.count(last) > url.count(pairs[last]):
+            url = url[:-1]
+        else:
+            break
+
+    return url
 
 
 def find_orcid(text: str) -> str | None:
