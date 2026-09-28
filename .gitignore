@@ -41,3 +41,7 @@ __pycache__/
 .ruff_cache/
 output/
 *.egg-info/
+
+
+# Test manuscripts (large binaries; keep local, not in repo)
+test_data/**/*.docx
