@@ -30,6 +30,8 @@ def result_to_dict(result: VerificationResult) -> dict:
         "explanation": result.explanation,
         "warnings": list(result.warnings),
         "search_url": result.search_url,
+        "url": result.url,
+        "url_status": result.url_status,
         "evidence": _evidence_to_dict(result.evidence),
     }
 
@@ -46,6 +48,8 @@ def dict_to_result(data: dict) -> VerificationResult:
         explanation=data.get("explanation", ""),
         warnings=list(data.get("warnings", [])),
         search_url=data.get("search_url"),
+        url=data.get("url"),
+        url_status=data.get("url_status"),
         evidence=_dict_to_evidence(data.get("evidence")),
     )
 

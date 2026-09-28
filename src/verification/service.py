@@ -20,6 +20,7 @@ from models import (
     VerificationStatus,
 )
 
+from .link_checker import LinkChecker, LinkStatus
 from .matcher import ReferenceMatcher
 from .provider import VerificationProvider
 
@@ -44,10 +45,14 @@ class VerificationService:
         providers: list[VerificationProvider],
         matcher: ReferenceMatcher | None = None,
         cache: VerificationCache | None = None,
+        link_checker: LinkChecker | None = None,
     ) -> None:
         self.providers = providers
         self.matcher = matcher or ReferenceMatcher()
         self.cache = cache
+        self.link_checker = (
+            link_checker if link_checker is not None else LinkChecker()
+        )
 
     def verify(self, reference: Reference) -> VerificationResult:
         """
@@ -136,7 +141,21 @@ class VerificationService:
                 search_url=search_url,
             )
 
-        # 5. Cache store ------------------------------------------------------
+        # 5. Copy the reference's own URL onto the result, and check
+        #    link liveness when the reference has a URL and the outcome
+        #    is not VERIFIED (for verified refs the check adds no signal
+        #    and costs a network round-trip).
+        result.url = reference.url
+        if reference.url and result.status != VerificationStatus.VERIFIED:
+            try:
+                status = self.link_checker.check(reference.url)
+                result.url_status = status.value
+            except Exception:
+                result.url_status = LinkStatus.UNKNOWN.value
+        else:
+            result.url_status = None
+
+        # 6. Cache store ------------------------------------------------------
         if self.cache:
             self.cache.set(cache_key, result_to_dict(result))
 

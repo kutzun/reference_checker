@@ -32,6 +32,18 @@ class VerificationResult:
 
     search_url: str | None = None
 
+    # The reference's own URL, if it has one. Copied from Reference.url
+    # during verification so the report can display it as a clickable
+    # link without needing access to the original Reference object.
+    url: str | None = None
+
+    # Link liveness for references that carry a URL. Values match
+    # verification.link_checker.LinkStatus ("live", "dead", "unknown"),
+    # stored as a plain string to keep models/ free of verification/
+    # imports. None means the reference had no URL, or the check was
+    # skipped.
+    url_status: str | None = None
+
     def is_verified(self) -> bool:
         """
         Check whether the reference was successfully verified.
