@@ -9,7 +9,6 @@ providers fail to verify a reference.
 """
 
 from datetime import datetime
-from urllib.parse import quote
 
 from cache.cache import VerificationCache
 from cache.serialization import dict_to_result, result_to_dict
@@ -23,6 +22,7 @@ from models import (
 from .link_checker import LinkChecker, LinkStatus
 from .matcher import ReferenceMatcher
 from .provider import VerificationProvider
+from .search_links import primary_search_url
 
 
 class VerificationService:
@@ -106,14 +106,12 @@ class VerificationService:
                 break
 
         # 3. Manual search link (only when below threshold) -------------------
+        # The destination depends on the reference: Turkish theses go to
+        # YÖK Tez, other Turkish material to Milli Kütüphane KAŞİF, and
+        # everything else to Google Scholar. See verification.search_links.
         search_url = None
         if best_score < self.VERIFIED_THRESHOLD:
-            title = reference.title or reference.raw_text
-            if title:
-                search_url = (
-                    "https://www.google.com/search?q="
-                    f"{quote(f'\"{title}\"')}"
-                )
+            search_url = primary_search_url(reference)
 
         # 4. Determine final status -------------------------------------------
         if best_score >= self.VERIFIED_THRESHOLD:

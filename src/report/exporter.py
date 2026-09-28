@@ -5,6 +5,7 @@ import csv
 from pathlib import Path
 from datetime import datetime
 from jinja2 import Template
+from verification.search_links import search_link_label
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -183,7 +184,7 @@ HTML_TEMPLATE = """
             </td>
             <td>
                 {% if ref.search_url %}
-                <a class="search-link" href="{{ ref.search_url }}" target="_blank">Google Search</a>
+                <a class="search-link" href="{{ ref.search_url }}" target="_blank">{{ search_link_label(ref.search_url) }}</a>
                 {% else %}
                 —
                 {% endif %}
@@ -270,6 +271,9 @@ class ReportExporter:
     def export_html(self, report: dict, path: Path) -> None:
         """Generate an elegant HTML report from the verification result."""
         template = Template(HTML_TEMPLATE)
+        # Expose search_link_label so the template can label each search
+        # link with its real destination (KAŞİF, YÖK Tez, Scholar).
+        template.globals["search_link_label"] = search_link_label
         html = template.render(
             summary=report.get("summary", {}),
             references=report.get("references", []),

@@ -16,6 +16,7 @@ from nicegui import ui
 from workflow.manuscript import ManuscriptProcessor
 from models import Reference
 from verification.runner import verify_references
+from verification.search_links import search_link_label
 from report.exporter import ReportExporter
 
 from internal_check.service import InternalCheckService
@@ -519,9 +520,11 @@ def build_results_page(report: dict):
                         ref_url = ref.get("url")
                         ref_url_status = ref.get("url_status")
                         with ui.row().classes("gap-2 items-center"):
-                            ui.link("Search in Google", ref["search_url"], new_tab=True).props(
-                                f"outline color='primary' size=sm"
-                            )
+                            ui.link(
+                                search_link_label(ref["search_url"]),
+                                ref["search_url"],
+                                new_tab=True,
+                            ).props("outline color='primary' size=sm")
                             if ref_url:
                                 if ref_url_status == "live":
                                     status_color = COLORS["success"]
