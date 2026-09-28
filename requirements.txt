@@ -1,0 +1,11 @@
+python-docx
+requests
+openpyxl
+reportlab
+
+pytest
+black
+ruff
+
+python-docx
+nicegui>=1.4

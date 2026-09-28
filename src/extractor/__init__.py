@@ -1,0 +1,3 @@
+"""
+Reference metadata extraction package.
+"""
