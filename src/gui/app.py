@@ -61,6 +61,36 @@ tabs_ref: Optional[ui.tabs] = None
 status_label: Optional[ui.label] = None
 
 
+def _reset_stale_state():
+    """
+    Clear per-manuscript state left over from a previous upload.
+
+    Called at the start of every new upload. Without it, a second
+    manuscript inherits the first one's report, progress counters, and
+    internal-check result. UI element references (containers, labels,
+    bars) and the user's language-profile choice are deliberately
+    preserved.
+    """
+    state["report"] = None
+    state["progress_done"] = 0
+    state["progress_total"] = 0
+    state["internal_check_result"] = None
+    state["internal_check_file_name"] = ""
+    state["internal_check_running"] = False
+
+    # Clear rendered markup in the results areas so the user does not
+    # see the previous manuscript's tables. Containers may be None if
+    # the app is being exercised outside a live UI (e.g. tests).
+    for key in ("results_container", "internal_check_results_container"):
+        container = state.get(key)
+        clear = getattr(container, "clear", None)
+        if callable(clear):
+            try:
+                clear()
+            except Exception:
+                pass
+
+
 # -------- Upload (multi‑file) --------------------------------------------
 async def handle_upload_multi(event):
     """Called when one or more files are uploaded (multiple=True)."""
@@ -74,6 +104,7 @@ async def handle_upload_multi(event):
     if not files:
         return
 
+    _reset_stale_state()
     state["uploaded_files"] = []
 
     status_label.set_text("Processing files...")
