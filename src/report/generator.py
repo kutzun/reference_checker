@@ -42,11 +42,16 @@ class ReportGenerator:
             sum(result.confidence for result in results) / total if total else 0.0
         )
 
+        not_found = sum(
+            result.status == VerificationStatus.NOT_FOUND for result in results
+        )
+
         return {
             "total": total,
             "verified": verified,
             "manual_review": manual_review,
             "failed": failed,
+            "not_found": not_found,
             "average_confidence": confidence,
         }
 

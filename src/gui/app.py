@@ -129,10 +129,12 @@ async def handle_upload_multi(event):
                 title = ref.title or ""
                 year = str(ref.year) if ref.year else ""
                 raw_text = ref.raw_text or ""
+                doi = ref.doi or ""
                 row = {
                     "authors": authors,
                     "title": title,
                     "year": year,
+                    "doi": doi,
                     "raw_text": raw_text,
                     "source": file_name,
                 }
@@ -183,6 +185,7 @@ def build_editor_page():
                 {"headerName": "Authors", "field": "authors", "editable": True, "resizable": True},
                 {"headerName": "Title", "field": "title", "editable": True, "resizable": True},
                 {"headerName": "Year", "field": "year", "editable": True, "resizable": True},
+                {"headerName": "DOI", "field": "doi", "editable": True, "resizable": True},
                 {"headerName": "Raw Text", "field": "raw_text", "editable": True, "resizable": True},
             ],
             "rowData": rows,
@@ -222,7 +225,7 @@ def build_editor_page():
 
 
 def add_row():
-    new_row = {"source": "", "authors": "", "title": "", "year": "", "raw_text": ""}
+    new_row = {"source": "", "authors": "", "title": "", "year": "", "doi": "", "raw_text": ""}
     state["editor_rows"].append(new_row)
     build_editor_page()
     ui.timer(0.1, lambda: resize_grid(), once=True)
@@ -273,8 +276,15 @@ def start_verification():
         authors = [a.strip() for a in row["authors"].split(";") if a.strip()] if row["authors"] else []
         title = row["title"] or None
         year = int(row["year"]) if row["year"].isdigit() else None
+        doi = row.get("doi") or None
         raw_text = row["raw_text"] or ""
-        refs.append(Reference(raw_text=raw_text, title=title, authors=authors, year=year))
+        refs.append(Reference(
+            raw_text=raw_text,
+            title=title,
+            authors=authors,
+            year=year,
+            doi=doi,
+        ))
         if raw_text:
             source_map[raw_text] = row.get("source", "")
 
@@ -359,6 +369,7 @@ def build_results_page(report: dict):
                 ("Total", summary.get("total", 0), COLORS["primary"]),
                 ("Verified", summary.get("verified", 0), COLORS["success"]),
                 ("Manual Review", summary.get("manual_review", 0), COLORS["warning"]),
+                ("Not Found", summary.get("not_found", 0), COLORS["text_light"]),
                 ("Failed", summary.get("failed", 0), COLORS["danger"]),
                 ("Avg Confidence", f"{summary.get('average_confidence', 0):.3f}", COLORS["primary"]),
             ]
