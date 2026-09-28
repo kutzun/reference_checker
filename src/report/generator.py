@@ -72,18 +72,24 @@ class ReportGenerator:
 
         references = []
         for result in results:
-            # Best match title if available, else raw reference text
+            # Best match title if available AND relevant, else raw text.
+            # A very low title_similarity means the provider returned an
+            # unrelated record — showing its title would mislead the user.
             best_title = None
             if result.evidence and result.evidence.matches:
                 best = result.evidence.best_match()
-                if best:
-                    best_title = best.title
+                if best and best.title:
+                    sim = best.title_similarity or 0.0
+                    if sim >= 0.3:
+                        best_title = best.title
 
             references.append({
                 "title": best_title or "Unknown",
                 "status": result.status.value,
                 "confidence": result.confidence,
                 "search_url": result.search_url,
+                "url": result.url,
+                "url_status": result.url_status,
             })
 
         return {
