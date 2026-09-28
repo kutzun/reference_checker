@@ -14,6 +14,7 @@ from models import (
 )
 
 from .provider import VerificationProvider
+from .search_links import is_turkish_looking
 from .tr_dizin_client import TrDizinClient
 
 
@@ -28,6 +29,34 @@ class TrDizinProvider(VerificationProvider):
     @property
     def name(self) -> str:
         return "tr_dizin"
+
+    def supports(self, reference: Reference) -> bool:
+        """
+        Return True only when querying TR Dizin could plausibly help.
+
+        Two filters, both conservative:
+
+        - Year: TR Dizin holds nothing from before the twentieth
+          century. An 1829 German journal has no chance of matching
+          and only wastes a query.
+
+        - Language: require at least one Turkish signal. This is
+          deliberately a *soft* filter — it does not prove the source
+          is Turkish, it just rules out references with no Turkish
+          signal at all. Diacritic-stripped Turkish titles are still
+          detected via the function-word layer in is_turkish_looking.
+          English-language articles published in Turkish journals
+          still carry a Turkish journal name or publisher, which the
+          structural-marker layer catches.
+
+        A false negative here means TR Dizin is not consulted for a
+        reference it might have matched. The reference falls through
+        to OpenLibrary and normally lands in manual review, so no
+        result is silently wrong — it is merely not maximally thorough.
+        """
+        if reference.year is not None and reference.year < 1900:
+            return False
+        return is_turkish_looking(reference)
 
     def search(self, reference: Reference) -> list[ReferenceMatch]:
         """

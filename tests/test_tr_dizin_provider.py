@@ -8,6 +8,7 @@ HTTP request is made.
 
 from models import Reference
 from models.enums import Provider, ReferenceType
+from models import Reference as _Ref  # (already imported as Reference)
 from verification.tr_dizin_provider import TrDizinProvider
 
 from test_data.providers.tr_dizin import MASAL_AI, MASAL_PROPP
@@ -96,3 +97,64 @@ def test_tr_dizin_provider_returns_empty_for_no_results():
     matches = provider.search(reference)
 
     assert matches == []
+
+# --- supports() ---------------------------------------------------------
+
+def test_supports_skips_pre_1900_reference():
+    """TR Dizin holds nothing from before the twentieth century, so
+    an 1829 German journal should never be queried against it."""
+    ref = Reference(
+        raw_text="Allgemeiner Musikalischer Anzeiger. Leipzig 1829.",
+        year=1829,
+    )
+    assert TrDizinProvider().supports(ref) is False
+
+
+def test_supports_skips_clearly_non_turkish_reference():
+    ref = Reference(
+        raw_text=(
+            "Berliner allgemeine musikalische Zeitung, (AmZ), "
+            "(30). 301-316."
+        ),
+    )
+    assert TrDizinProvider().supports(ref) is False
+
+
+def test_supports_accepts_turkish_book():
+    ref = Reference(
+        raw_text="Tanyeli, U. (2017). Yıkarak yapmak. Metis Yayınları.",
+        year=2017,
+    )
+    assert TrDizinProvider().supports(ref) is True
+
+
+def test_supports_accepts_turkish_article():
+    ref = Reference(
+        raw_text=(
+            "Kaçar, G. Y. (2008). Türk Mûsikîsinde Makam. "
+            "İstem, 6(11), 145-158."
+        ),
+        year=2008,
+    )
+    assert TrDizinProvider().supports(ref) is True
+
+
+def test_supports_accepts_modern_reference_without_year():
+    """If the year is unknown we cannot rule the reference out."""
+    ref = Reference(
+        raw_text=(
+            "Yılmaz, A. Osmanlı tarihi üzerine notlar. "
+            "İstanbul Üniversitesi."
+        ),
+    )
+    assert TrDizinProvider().supports(ref) is True
+
+
+def test_supports_accepts_diacritic_stripped_turkish_title():
+    """Function words carry the language signal when diacritics are
+    absent. Without this, a Turkish book whose title was typed in
+    plain ASCII would be skipped."""
+    ref = Reference(
+        raw_text="Yikarak yapmak ve mimarlik eyleminin modernligi. Metis.",
+    )
+    assert TrDizinProvider().supports(ref) is True
