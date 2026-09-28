@@ -5,7 +5,7 @@ Queries the TR Dizin search API and converts returned records into
 ReferenceMatch objects. Useful for Turkish journal articles that do
 not appear in Crossref.
 """
-
+import re
 from models import (
     Provider,
     Reference,
@@ -33,15 +33,17 @@ class TrDizinProvider(VerificationProvider):
         """
         Search TR Dizin for matching references.
 
-        The query uses the reference's title (or book title, or raw
-        text as a last resort) — TR Dizin's search does its own
-        relevance ranking.
+        The query uses the reference's title if available. When there
+        is no title, we fall back to raw_text but strip URLs and
+        access-date markers — TR Dizin's search engine returns garbage
+        (or spam) for URL-laden queries.
         """
-        query = (
+        raw = (
             reference.title
             or reference.book_title
             or reference.raw_text
         )
+        query = self._clean_query(raw)
         if not query:
             return []
 
@@ -51,6 +53,37 @@ class TrDizinProvider(VerificationProvider):
             return []
 
         return [self._convert_source(src) for src in sources]
+
+    @staticmethod
+    def _clean_query(text: str) -> str:
+        """
+        Remove URL and access-date fragments from a query string.
+
+        Examples:
+            "Bis, German Music for Trombones. https://eclassical...
+             Erişim Tarihi: 05.06.2026."
+                -> "Bis, German Music for Trombones."
+        """
+        if not text:
+            return ""
+
+        # Strip http/https/ftp URLs (up to the next whitespace).
+        text = re.sub(r"\b(?:https?|ftp)://\S+", " ", text)
+
+        # Strip Turkish and English access-date markers.
+        text = re.sub(
+            r"\b(?:Erişim\s+Tarihi|Accessed\s+Date|Retrieved)\s*:?\s*\S+",
+            " ",
+            text,
+            flags=re.IGNORECASE,
+        )
+
+        # Strip URNs and other long non-word blocks.
+        text = re.sub(r"\burn:\S+", " ", text)
+
+        # Collapse whitespace.
+        text = re.sub(r"\s+", " ", text).strip()
+        return text
 
     def _convert_source(self, src: dict) -> ReferenceMatch:
         return ReferenceMatch(
