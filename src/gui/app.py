@@ -135,6 +135,12 @@ async def handle_upload_multi(event):
                     "title": title,
                     "year": year,
                     "doi": doi,
+                    "url": ref.url or "",
+                    "journal": ref.journal or "",
+                    "volume": ref.volume or "",
+                    "issue": ref.issue or "",
+                    "pages": ref.pages or "",
+                    "publisher": ref.publisher or "",
                     "raw_text": raw_text,
                     "source": file_name,
                 }
@@ -186,6 +192,8 @@ def build_editor_page():
                 {"headerName": "Title", "field": "title", "editable": True, "resizable": True},
                 {"headerName": "Year", "field": "year", "editable": True, "resizable": True},
                 {"headerName": "DOI", "field": "doi", "editable": True, "resizable": True},
+                {"headerName": "URL", "field": "url", "editable": True, "resizable": True},
+                {"headerName": "Journal", "field": "journal", "editable": True, "resizable": True},
                 {"headerName": "Raw Text", "field": "raw_text", "editable": True, "resizable": True},
             ],
             "rowData": rows,
@@ -225,7 +233,11 @@ def build_editor_page():
 
 
 def add_row():
-    new_row = {"source": "", "authors": "", "title": "", "year": "", "doi": "", "raw_text": ""}
+    new_row = {
+        "source": "", "authors": "", "title": "", "year": "",
+        "doi": "", "url": "", "journal": "", "volume": "",
+        "issue": "", "pages": "", "publisher": "", "raw_text": "",
+    }
     state["editor_rows"].append(new_row)
     build_editor_page()
     ui.timer(0.1, lambda: resize_grid(), once=True)
@@ -277,6 +289,12 @@ def start_verification():
         title = row["title"] or None
         year = int(row["year"]) if row["year"].isdigit() else None
         doi = row.get("doi") or None
+        url = row.get("url") or None
+        journal = row.get("journal") or None
+        volume = row.get("volume") or None
+        issue = row.get("issue") or None
+        pages = row.get("pages") or None
+        publisher = row.get("publisher") or None
         raw_text = row["raw_text"] or ""
         refs.append(Reference(
             raw_text=raw_text,
@@ -284,6 +302,12 @@ def start_verification():
             authors=authors,
             year=year,
             doi=doi,
+            url=url,
+            journal=journal,
+            volume=volume,
+            issue=issue,
+            pages=pages,
+            publisher=publisher,
         ))
         if raw_text:
             source_map[raw_text] = row.get("source", "")
@@ -397,13 +421,31 @@ def build_results_page(report: dict):
                 status_display = "Verified"
             elif status == "manual_review":
                 status_display = "Manual Review"
+            elif status == "not_found":
+                status_display = "Not Found"
             else:
                 status_display = status.replace("_", " ").title()
+
+            # Link liveness indicator, when the reference had a URL.
+            url = ref.get("url")
+            url_status = ref.get("url_status")
+            if url:
+                if url_status == "live":
+                    link_display = "✓ Live"
+                elif url_status == "dead":
+                    link_display = "✗ Dead"
+                elif url_status == "unknown":
+                    link_display = "? Unknown"
+                else:
+                    link_display = "—"
+            else:
+                link_display = ""
 
             row = {
                 "title": ref.get("raw_text") or ref.get("title", "Unknown"),
                 "status": status_display,
                 "confidence": f"{ref.get('confidence', 0):.3f}",
+                "link": link_display,
             }
             if ref.get("source"):
                 row["source"] = ref["source"]
@@ -417,6 +459,7 @@ def build_results_page(report: dict):
         columns.extend([
             {"name": "status", "label": "Status", "field": "status", "align": "left"},
             {"name": "confidence", "label": "Confidence", "field": "confidence", "align": "center"},
+            {"name": "link", "label": "Link", "field": "link", "align": "center"},
         ])
 
         ui.table(columns=columns, rows=table_rows).classes("w-full mt-4").style(f"border-radius: 8px; overflow: hidden;")
@@ -442,9 +485,28 @@ def build_results_page(report: dict):
                         ui.label(f"Confidence: {ref.get('confidence', 0):.3f}").style(
                             f"color: {COLORS['text_light']}; font-size: 0.9rem;"
                         )
-                        ui.link("Search in Google", ref["search_url"], new_tab=True).props(
-                            f"outline color='primary' size=sm"
-                        )
+                        ref_url = ref.get("url")
+                        ref_url_status = ref.get("url_status")
+                        with ui.row().classes("gap-2 items-center"):
+                            ui.link("Search in Google", ref["search_url"], new_tab=True).props(
+                                f"outline color='primary' size=sm"
+                            )
+                            if ref_url:
+                                if ref_url_status == "live":
+                                    status_color = COLORS["success"]
+                                    status_text = "✓ Live"
+                                elif ref_url_status == "dead":
+                                    status_color = COLORS["danger"]
+                                    status_text = "✗ Dead"
+                                else:
+                                    status_color = COLORS["text_light"]
+                                    status_text = "? Unknown"
+                                ui.link("Open Link", ref_url, new_tab=True).props(
+                                    "outline color='secondary' size=sm"
+                                )
+                                ui.label(status_text).style(
+                                    f"color: {status_color}; font-size: 0.85rem; font-weight: bold;"
+                                )
         else:
             ui.label("All references were verified. 🎉").style(
                 f"color: {COLORS['success']}; font-weight: bold; margin-top: 1.5rem;"

@@ -48,6 +48,7 @@ HTML_TEMPLATE = """
         .card .label { font-size: 0.9em; color: #666; }
         .verified .number { color: #2e7d32; }
         .manual .number { color: #cb9932; }
+        .notfound .number { color: #666; }
         .failed .number { color: #A91101; }
         table {
             width: 100%;
@@ -67,8 +68,12 @@ HTML_TEMPLATE = """
         tr:nth-child(even) { background: #f2f5fc; }
         .search-link { color: #243f90; text-decoration: none; }
         .search-link:hover { text-decoration: underline; }
+        .link-live { color: #2e7d32; font-weight: bold; }
+        .link-dead { color: #A91101; font-weight: bold; }
+        .link-unknown { color: #666; font-weight: bold; }
         .verified-text { color: #2e7d32; font-weight: bold; }
         .manual-text { color: #cb9932; font-weight: bold; }
+        .notfound-text { color: #666; font-weight: bold; }
         .failed-text { color: #A91101; font-weight: bold; }
         .footer {
             margin-top: 40px;
@@ -111,6 +116,10 @@ HTML_TEMPLATE = """
             <div class="number">{{ summary.manual_review }}</div>
             <div class="label">Manual Review</div>
         </div>
+        <div class="card notfound">
+            <div class="number">{{ summary.not_found }}</div>
+            <div class="label">Not Found</div>
+        </div>
         <div class="card failed">
             <div class="number">{{ summary.failed }}</div>
             <div class="label">Failed</div>
@@ -129,6 +138,7 @@ HTML_TEMPLATE = """
             {% endif %}
             <th>Status</th>
             <th>Confidence</th>
+            <th>Link</th>
             <th>Manual Search</th>
         </tr>
         {% for ref in references %}
@@ -148,11 +158,29 @@ HTML_TEMPLATE = """
                 <span class="verified-text">Verified</span>
                 {% elif ref.status == 'manual_review' %}
                 <span class="manual-text">Manual Review</span>
+                {% elif ref.status == 'not_found' %}
+                <span class="notfound-text">Not Found</span>
                 {% else %}
                 <span class="failed-text">{{ ref.status }}</span>
                 {% endif %}
             </td>
             <td>{{ "%.3f"|format(ref.confidence) }}</td>
+            <td>
+                {% if ref.url %}
+                    {% if ref.url_status == 'live' %}
+                    <span class="link-live">✓ Live</span>
+                    {% elif ref.url_status == 'dead' %}
+                    <span class="link-dead">✗ Dead</span>
+                    {% elif ref.url_status == 'unknown' %}
+                    <span class="link-unknown">? Unknown</span>
+                    {% else %}
+                    —
+                    {% endif %}
+                    <br><a class="search-link" href="{{ ref.url }}" target="_blank">Open Link</a>
+                {% else %}
+                —
+                {% endif %}
+            </td>
             <td>
                 {% if ref.search_url %}
                 <a class="search-link" href="{{ ref.search_url }}" target="_blank">Google Search</a>
@@ -218,7 +246,13 @@ class ReportExporter:
                 headers = ["reference"]
                 if any("source" in ref for ref in refs):
                     headers.append("source")
-                headers.extend(["status", "confidence", "search_url"])
+                headers.extend([
+                    "status",
+                    "confidence",
+                    "url",
+                    "url_status",
+                    "search_url",
+                ])
                 writer.writerow(headers)
                 for ref in refs:
                     row = [ref.get("raw_text") or ref.get("title", "")]
@@ -227,6 +261,8 @@ class ReportExporter:
                     row.extend([
                         ref.get("status", ""),
                         ref.get("confidence", 0.0),
+                        ref.get("url", ""),
+                        ref.get("url_status", ""),
                         ref.get("search_url", ""),
                     ])
                     writer.writerow(row)
