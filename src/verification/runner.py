@@ -2,19 +2,28 @@
 
 from pathlib import Path
 from typing import Callable, Optional
+
 from models import Reference
+from report.exporter import ReportExporter
+from report.generator import ReportGenerator
 from verification.crossref_provider import CrossrefProvider
+from verification.doi_org_provider import DoiOrgProvider
 from verification.openlibrary_provider import OpenLibraryProvider
 from verification.service import VerificationService
-from report.generator import ReportGenerator
-from report.exporter import ReportExporter
+from verification.tr_dizin_provider import TrDizinProvider
+from workflow.manuscript import ManuscriptProcessor
 
 
 def run_verification(document_path: Path, output_dir: Path) -> dict:
     """Extract references from a DOCX, verify them, and return a report."""
     processor = ManuscriptProcessor()
     references = processor.extract_references(document_path)
-    return _verify_and_report(references, output_dir, progress_callback=None, source_name=document_path.name)
+    return _verify_and_report(
+        references,
+        output_dir,
+        progress_callback=None,
+        source_name=document_path.name,
+    )
 
 
 def verify_references(
@@ -24,7 +33,9 @@ def verify_references(
     source_name: Optional[str] = None,
 ) -> dict:
     """Verify a list of references, optionally reporting progress and labelling source."""
-    return _verify_and_report(references, output_dir, progress_callback, source_name)
+    return _verify_and_report(
+        references, output_dir, progress_callback, source_name
+    )
 
 
 def _verify_and_report(
@@ -36,7 +47,9 @@ def _verify_and_report(
     """Internal helper: verify references and generate report."""
     service = VerificationService(
         providers=[
+            DoiOrgProvider(),
             CrossrefProvider(),
+            TrDizinProvider(),
             OpenLibraryProvider(),
         ],
     )
