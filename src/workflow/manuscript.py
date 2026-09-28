@@ -15,6 +15,9 @@ from parser.docx_parser import (
 from parser.reference_parser import (
     ReferenceParser,
 )
+from parser.reference_splitter import (
+    split_references,
+)
 
 
 class ManuscriptProcessor:
@@ -41,29 +44,20 @@ class ManuscriptProcessor:
         """
         Extract references from DOCX.
 
-        Only returns entries that contain at least a title or a book title.
-        This prevents non‑reference text (code, appendix headings, etc.)
-        from being passed to the verification pipeline.
-
-        Args:
-            file_path:
-                Manuscript path.
-
-        Returns:
-            Parsed references.
+        Runs the reference section through the splitter first, so that
+        references spanning multiple paragraphs are joined before
+        parsing. Entries without any usable title are dropped.
         """
 
         parser = DocxParser(file_path)
 
-        entries = parser.extract_reference_section()
+        paragraphs = parser.extract_reference_section()
 
-        all_refs = self.reference_parser.parse(entries)
+        entries = split_references(paragraphs)
 
-        # Discard entries without any usable title – they are almost
-        # certainly not real bibliographic references.
-        filtered = [
-            ref for ref in all_refs
-            if ref.title or ref.book_title
-        ]
-
-        return filtered
+        # The splitter already filtered to entries that look like
+        # references. The parser extracts whatever metadata it can from
+        # each. Entries the parser cannot fully parse are kept — they
+        # are still references, and verification will flag them for
+        # manual review if no provider can match them.
+        return self.reference_parser.parse(entries)
