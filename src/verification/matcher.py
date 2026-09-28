@@ -25,12 +25,29 @@ class ReferenceMatcher:
         * Otherwise, a weighted average of the available evidence.
         """
         # ----- Exact identifier matches ---------------------------------
+        # A DOI that resolves is not proof that the reference is correct:
+        # an AI-fabricated DOI can point at a real paper on an unrelated
+        # topic. Compute title similarity first, and refuse to verify if
+        # the DOI's title has nothing to do with the reference's title.
         if (
             reference.doi
             and match.doi
             and reference.doi.lower() == match.doi.lower()
         ):
             match.doi_match = True
+
+            title_sim = None
+            if reference.title and match.title:
+                title_sim = token_similarity(reference.title, match.title)
+                match.title_similarity = title_sim
+
+            if title_sim is not None and title_sim < 0.3:
+                # DOI resolves to a different paper. Score 0 so the
+                # cascade continues and this match cannot verify.
+                match.evidence_weight = 1.0
+                match.overall_score = 0.0
+                return 0.0
+
             match.evidence_weight = 1.0
             match.overall_score = 1.0
             return 1.0

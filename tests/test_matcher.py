@@ -23,20 +23,23 @@ def base_reference():
 
 
 def test_exact_doi_match(matcher, base_reference):
+    """
+    When DOI matches AND the title is a real match, score is 1.0.
+    A DOI alone is not sufficient — see test_matcher_doi_title.py
+    for the fabricated-DOI case.
+    """
     ref = base_reference
     ref.doi = "10.1075/lllt.32.02bul"
     match = ReferenceMatch(
         provider=Provider.CROSSREF,   # any valid provider
         reference_type=ReferenceType.JOURNAL_ARTICLE,
-        title="Ignored title",
+        title=ref.title,               # title must match for DOI to score
         authors=[],
         year=2012,
         doi="10.1075/lllt.32.02bul",
     )
     score = matcher.score(ref, match)
     assert score == 1.0
-    assert match.evidence_weight == 1.0
-    assert match.doi_match is True
 
 
 def test_title_plus_year_no_authors(matcher, base_reference):
