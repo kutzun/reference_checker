@@ -34,7 +34,18 @@ def token_similarity(
     second: str,
 ) -> float:
     """
-    Calculate simple token overlap similarity.
+    Calculate token overlap similarity.
+
+    Combines Jaccard (symmetric overlap) with containment (subset
+    overlap). This fixes the subtitle-truncation case: a reference
+    cites "Book: A Long Subtitle" while the provider stores only
+    "Book". Jaccard alone undervalues that match because the provider
+    title is a strict subset of the reference title. Containment
+    treats it as a full match.
+
+    Containment is guarded by a minimum token count so short generic
+    titles ("Science", "History") do not match anything containing
+    those words.
 
     Returns:
         Value between 0 and 1.
@@ -51,4 +62,12 @@ def token_similarity(
 
     union = first_tokens | second_tokens
 
-    return len(intersection) / len(union)
+    jaccard = len(intersection) / len(union)
+
+    min_size = min(len(first_tokens), len(second_tokens))
+
+    if min_size >= 3:
+        containment = len(intersection) / min_size
+        return max(jaccard, containment)
+
+    return jaccard
