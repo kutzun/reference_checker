@@ -162,6 +162,24 @@ def is_article_looking(reference: Reference) -> bool:
         return True
     return False
 
+def _kasif_safe_query(title: str) -> str:
+    """
+    Prepare a title for inclusion in a KAŞİF ``Ara=`` query.
+
+    KAŞİF treats ``:`` as a field-separator operator: passing
+    ``Makam: Türk Sanat Musikisinde Makam Uygulaması`` produces the
+    query ``Makam%3A%20Türk%20...``, which returns zero hits even when
+    the book is in the catalog. Replacing the colon with a space and
+    collapsing whitespace produces a plain keyword query that KAŞİF
+    handles correctly.
+
+    Quoting is deliberately not applied: KAŞİF's search is already
+    keyword-based, and enclosing quotes in the query string tend to
+    reduce matches rather than narrow them.
+    """
+    cleaned = title.replace(":", " ")
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    return cleaned
 
 def primary_search_url(reference: Reference) -> str | None:
     """
@@ -191,9 +209,11 @@ def primary_search_url(reference: Reference) -> str | None:
         return f"https://scholar.google.com/scholar?q={encoded_quoted}"
 
     if is_turkish_looking(reference):
+        kasif_query = _kasif_safe_query(title)
+        encoded_kasif = quote(kasif_query)
         return (
             "https://kasif.mkutup.gov.tr/OpacArama.aspx"
-            f"?Ara={encoded_plain}&DtSrc=0&fld=-1&NvBar=0"
+            f"?Ara={encoded_kasif}&DtSrc=0&fld=-1&NvBar=0"
         )
 
     return f"https://scholar.google.com/scholar?q={encoded_quoted}"
