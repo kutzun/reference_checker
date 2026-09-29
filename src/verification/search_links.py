@@ -203,14 +203,18 @@ def primary_search_url(reference: Reference) -> str | None:
     # KAŞİF works better without enclosing quotes; Scholar uses them
     # as an exact-phrase operator and keeps them.
     encoded_quoted = quote(f'"{title}"')
-    encoded_plain = quote(title)
 
     if is_article_looking(reference):
         return f"https://scholar.google.com/scholar?q={encoded_quoted}"
 
     if is_turkish_looking(reference):
-        kasif_query = _kasif_safe_query(title)
-        encoded_kasif = quote(kasif_query)
+        # KAŞİF accepts literal ':' and ',' in the Ara= parameter.
+        # Encoded forms (%3A, %2C) are treated as field separators and
+        # return no results for titles containing either character.
+        # Confirmed on "Kültürel bellek: Eski yüksek kültürlerde yazı,
+        # hatırlama ve politik kimlik" and "Makam: Türk Sanat
+        # Musikisinde Makam Uygulaması".
+        encoded_kasif = quote(title, safe=":,")
         return (
             "https://kasif.mkutup.gov.tr/OpacArama.aspx"
             f"?Ara={encoded_kasif}&DtSrc=0&fld=-1&NvBar=0"
