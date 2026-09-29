@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDEs
+.vscode/
+.idea/
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Python cache
+.pytest_cache/
+.mypy_cache/
+
+# Environment variables
+.env
+
+# Temporary files
+*.tmp
+*.bak
+
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+output/
+*.egg-info/
+
+
+# Test manuscripts (large binaries; keep local, not in repo)
+test_data/**/*.docx
