@@ -169,6 +169,34 @@ def _extract_first_last(text: str) -> List[str]:
             authors.append(parsed)
     return authors
 
+def _parse_author_block(block: str) -> list[str]:
+    """
+    Parse one chunk of an author list. The chunk is assumed to have
+    been split at an '&' or 'and' conjunction, so it contains exactly
+    one author name.
+
+    Handles three forms:
+      - 'Surname, Initials'  (Kellogg, R. T.)
+      - 'Surname, Given'     (Kılıç, Mahmud Erol)
+      - bare mononym        (Rosmawati)
+    """
+    block = block.strip().strip(",").strip()
+    if not block:
+        return []
+
+    result = _extract_last_first(block)
+    if result:
+        return result
+
+    # Bare mononym: no comma, one word, at least two characters.
+    # Single-letter tokens are treated as initials, not names.
+    if "," not in block and len(block.split()) == 1 and len(block) >= 2:
+        return [block]
+
+    parsed = _parse_first_last_token(block)
+    if parsed:
+        return [parsed]
+    return []
 
 def extract_authors(text: str) -> list[str]:
     """
@@ -202,12 +230,17 @@ def extract_authors(text: str) -> list[str]:
         if institutional:
             return [institutional]
 
-    # Normalise "and" / "&" to a simple comma so the regex below sees a
-    # uniform list.
-    author_part = _AND_AMPERSAND_RE.sub(", ", author_part)
+    # Split the author list at '&' and 'and' boundaries. Splitting
+    # before normalisation preserves mononym authors (Rosmawati) that
+    # would otherwise be swallowed when '&' is replaced by a comma:
+    # 'Rosmawati, & Lowie, W.' collapses to 'Rosmawati, Lowie, W.'
+    # and the parser reads 'Rosmawati' + 'L' (from 'Lowie') as one
+    # author, dropping Lowie entirely.
+    blocks = _AND_AMPERSAND_RE.split(author_part)
 
-    # Primary: try "Last, First" extraction.
-    authors = _extract_last_first(author_part)
+    authors: list[str] = []
+    for block in blocks:
+        authors.extend(_parse_author_block(block))
 
     # If any extracted author contains more than one comma, the regex
     # likely matched garbage. Discard and fall back to the first-last parser.
