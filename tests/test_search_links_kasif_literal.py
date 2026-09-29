@@ -57,3 +57,69 @@ def test_colon_free_title_unchanged():
 
     assert url is not None
     assert "Fark%20ve%20tekrar" in url
+
+
+
+# ---------------------------------------------------------------------------
+# Short-title quoting
+# ---------------------------------------------------------------------------
+
+def test_short_title_without_colon_is_quoted():
+    """
+    KAŞİF's default search is keyword AND, not phrase. For a short
+    title made of common words, the AND query returns too many records
+    and the target is buried beyond the first page. Phrase search
+    (quotes) returns the book directly.
+
+    Real case: "Fark ve tekrar" (Deleuze, Norgunk 2017) is in KAŞİF
+    but is not found without quotes.
+    """
+    ref = _turkish_book("Fark ve tekrar")
+    url = primary_search_url(ref)
+
+    assert url is not None
+    assert "%22Fark%20ve%20tekrar%22" in url, (
+        f"short title must be quoted: {url!r}"
+    )
+
+
+def test_long_title_without_colon_is_not_quoted():
+    """
+    Contract guard: a title long enough to be distinctive on its own
+    must remain unquoted, as it is today.
+    """
+    ref = _turkish_book(
+        "Osmanlı musikisinin tarihsel dönüşümü ve kurumsal "
+        "kodifikasyon süreçleri"
+    )
+    url = primary_search_url(ref)
+
+    assert url is not None
+    assert "%22" not in url, f"long title must not be quoted: {url!r}"
+
+
+def test_short_title_with_colon_is_not_quoted():
+    """
+    Contract guard: a colon in the title always wins over the short-
+    title rule. Phrase search on a subtitle-bearing title risks failure
+    if the catalog stores the subtitle differently.
+    """
+    ref = _turkish_book("Aşk: Bir hikâye")
+    url = primary_search_url(ref)
+
+    assert url is not None
+    assert "%22" not in url, f"colon title must not be quoted: {url!r}"
+    assert "%3A" not in url, f"colon must be literal: {url!r}"
+    assert "%C5%9Fk:" in url, f"colon must be literal: {url!r}"
+
+def test_short_title_without_common_word_is_not_quoted():
+    """
+    Contract guard for the narrow rule: a short title made of
+    distinctive words searches fine unquoted, and phrase search could
+    fail if the catalog stores internal punctuation differently.
+    """
+    ref = _turkish_book("Türk Mûsıkîsinin Mes'eleleri")
+    url = primary_search_url(ref)
+
+    assert url is not None
+    assert "%22" not in url, f"distinctive short title must not be quoted: {url!r}"

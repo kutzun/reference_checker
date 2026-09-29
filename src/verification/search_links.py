@@ -214,7 +214,24 @@ def primary_search_url(reference: Reference) -> str | None:
         # Confirmed on "Kültürel bellek: Eski yüksek kültürlerde yazı,
         # hatırlama ve politik kimlik" and "Makam: Türk Sanat
         # Musikisinde Makam Uygulaması".
-        encoded_kasif = quote(title, safe=":,")
+        #
+        # KAŞİF's default search is keyword AND, not phrase. Short
+        # titles made of common words return too many records and bury
+        # the target beyond the first page. Quote titles of four words
+        # or fewer with no colon, to trigger phrase search. Colon
+        # titles stay unquoted: phrase search on a subtitle risks
+        # failure if the catalog stores the subtitle differently.
+        stripped = title.strip()
+        word_count = len(stripped.split())
+        has_common_word = any(
+            w in stripped.casefold() for w in (" ve ", " ile ", " bir ")
+        )
+        if ":" not in stripped and word_count <= 4 and has_common_word:
+            kasif_query = f'"{stripped}"'
+        else:
+            kasif_query = stripped
+
+        encoded_kasif = quote(kasif_query, safe=':,')
         return (
             "https://kasif.mkutup.gov.tr/OpacArama.aspx"
             f"?Ara={encoded_kasif}&DtSrc=0&fld=-1&NvBar=0"
