@@ -104,6 +104,11 @@ def normalize_author_name(name: str) -> str:
     name = re.sub(r"[^\w\s]", " ", name, flags=re.UNICODE)
     name = re.sub(r"\s+", " ", name).strip()
     name = _AUTHOR_SUFFIX_RE.sub("", name).strip()
+    # Strip trailing single-letter initials. Turkish in-text style
+    # writes "Anadol R." where the reference list writes "Anadol, R.";
+    # without this step the two normalize to "anadol r" and "anadol"
+    # and never match.
+    name = re.sub(r"(\s+[a-z])+$", "", name).strip()
     return name
 
 
