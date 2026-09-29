@@ -426,3 +426,45 @@ def test_comma_separated_years_does_not_misfire_on_pages():
     assert parenthetical[0].year == 2020
     assert result.missing_references() == []
     assert result.uncited_references() == []
+
+
+
+# ---------------------------------------------------------------------------
+# Defect 5 — parenthetical line numbers treated as numeric citations
+# ---------------------------------------------------------------------------
+
+def test_parenthetical_line_number_not_a_citation():
+    """
+    A parenthetical integer in the body is not a citation. In Ottoman
+    studies, "(594)" refers to a couplet of the primary text under
+    study, not to entry 594 of the reference list.
+
+    On current code, the extractor treats any parenthetical integer as
+    a numeric citation, which produces a false MISSING (no such entry
+    in the list) and, because the numeric pass then runs, a false
+    UNCITED for every reference the manuscript does have.
+
+    A manuscript with twenty such line references and thirty real
+    references would produce twenty false MISSING and thirty false
+    UNCITED.
+    """
+    body = "The metaphor appears in the couplet (594) of the mesnevi."
+    refs = [
+        Reference(
+            raw_text="Alpay, G. (1972). Çengname'de musikî terimleri.",
+            authors=["Alpay"],
+            year=1972,
+        )
+    ]
+
+    service = InternalCheckService(profile=ENGLISH)
+    result = service.check_text(body, refs)
+
+    numeric = [c for c in result.citations if c.kind == CitationKind.NUMERIC]
+    assert numeric == [], (
+        f"expected no numeric citations, got {numeric!r}"
+    )
+
+    assert result.missing_references() == [], (
+        "a line reference is not a citation and must not be reported as missing"
+    )

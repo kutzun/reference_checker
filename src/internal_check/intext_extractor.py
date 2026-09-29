@@ -185,21 +185,7 @@ class InTextExtractor:
                 self._unparsed.append((raw, location))
             return citations
 
-        # Case 2: pure numeric in parens -> numeric citation.
-        nums = self._expand_numeric(content)
-        if nums:
-            citations.append(
-                InTextCitation(
-                    raw=raw,
-                    kind=CitationKind.NUMERIC,
-                    numbers=nums,
-                    location=location,
-                    confidence=0.99,
-                )
-            )
-            return citations
-
-        # Case 3: author-year parenthetical, possibly with semicolons.
+        # Case 2: author-year parenthetical, possibly with semicolons.
         for seg in re.split(r"\s*[;|]\s*", content):
             seg = seg.strip()
             if not seg:
