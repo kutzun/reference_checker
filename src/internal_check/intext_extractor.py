@@ -165,8 +165,8 @@ class InTextExtractor:
         if year_at_start:
             year = int(year_at_start.group(1))
             suffix = year_at_start.group(2) or None
-            author = self._find_narrative_author(text, start)
-            if author:
+            authors = self._find_narrative_authors(text, start)
+            if authors:
                 confidence = (
                     0.85 if self._has_leading_marker(text, start) else 0.6
                 )
@@ -174,7 +174,7 @@ class InTextExtractor:
                     InTextCitation(
                         raw=raw,
                         kind=CitationKind.NARRATIVE,
-                        authors=[author],
+                        authors=authors,
                         year=year,
                         year_suffix=suffix,
                         location=location,
@@ -305,35 +305,79 @@ class InTextExtractor:
 
         return stripped
 
-    def _find_narrative_author(
+    def _find_narrative_authors(
         self, text: str, paren_start: int,
-    ) -> str | None:
+    ) -> list[str]:
         """
         Look up to :data:`_NARRATIVE_LOOKBACK_WORDS` words before
-        *paren_start* for a likely author surname.
+        *paren_start* for a likely author phrase, then split it into
+        individual surnames via the profile's conjunctions and
+        et-al markers.
+
+        Walks backwards from the parenthesis, collecting tokens that
+        are capitalized words, profile conjunctions ("and", "ve"), or
+        parts of profile et-al markers ("et al.", "vd."). Stops at the
+        first token that is none of those. This recovers multi-author
+        phrases ("Smith and Jones") and et-al phrases ("Smith et al.")
+        without over-collecting sentence content.
+
+        Returns an empty list if no plausible author phrase is found.
         """
         prefix = text[:paren_start].rstrip()
         if not prefix:
-            return None
+            return []
 
         tokens = prefix.split()
-        window_text = " ".join(tokens[-_NARRATIVE_LOOKBACK_WORDS:])
-        window_text = self._strip_leading_markers(window_text)
+        window = tokens[-_NARRATIVE_LOOKBACK_WORDS:]
 
-        if not window_text:
-            return None
+        conjunctions_lower = frozenset(
+            c.casefold() for c in self.profile.conjunctions
+        )
+        et_al_parts = self._et_al_token_parts()
 
-        last_token = window_text.split()[-1]
-        last_token = last_token.strip(" .,;:()[]'\"\u2019\u2018")
+        collected: list[str] = []
+        for token in reversed(window):
+            bare = token.strip(".,;:()[]'\"\u2019\u2018")
+            if not bare:
+                break
+            bare_lower = bare.casefold()
+            if bare_lower in conjunctions_lower:
+                collected.append(token)
+                continue
+            if bare_lower in et_al_parts:
+                collected.append(token)
+                continue
+            if bare[0].isalpha() and bare[0].isupper():
+                collected.append(token)
+                continue
+            break
 
-        if not last_token:
-            return None
-        if not last_token[0].isalpha():
-            return None
-        if not last_token[0].isupper():
-            return None
+        if not collected:
+            return []
 
-        return last_token
+        collected.reverse()
+        phrase = " ".join(collected)
+        phrase = self._strip_leading_markers(phrase)
+        if not phrase:
+            return []
+
+        return self._split_authors(phrase)
+
+    def _et_al_token_parts(self) -> frozenset[str]:
+        """
+        Individual words that make up multi-word et-al markers,
+        lowercased and stripped of punctuation.
+
+        ``"et al."``   contributes ``{"et", "al"}``.
+        ``"ve ark."``  contributes ``{"ve", "ark"}``.
+        """
+        parts: set[str] = set()
+        for marker in self.profile.et_al_markers:
+            for piece in marker.split():
+                piece = piece.strip(".,;:").casefold()
+                if piece:
+                    parts.add(piece)
+        return frozenset(parts)
 
     def _has_leading_marker(self, text: str, paren_start: int) -> bool:
         """Return True if a narrative_leading marker precedes the paren."""

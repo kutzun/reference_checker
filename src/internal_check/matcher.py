@@ -40,7 +40,11 @@ def _reference_key(reference: Reference) -> str:
     """Derive a matching key from a reference-list entry."""
     if not reference.authors or reference.year is None:
         return ""
-    return citation_key(reference.authors[0], reference.year, None)
+    return citation_key(
+        reference.authors[0],
+        reference.year,
+        reference.year_suffix,
+    )
 
 
 class InternalMatcher:
