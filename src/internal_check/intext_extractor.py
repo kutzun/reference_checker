@@ -52,6 +52,14 @@ _NUMERIC_PART_RE = re.compile(r"^\s*(\d+)\s*(?:[-–]\s*(\d+))?\s*$")
 # Trailing punctuation to strip from an author phrase.
 _TRAILING_PUNCT_RE = re.compile(r"[\s,;:]+$")
 
+# Lowercase surname particles used across European and Arabic-transliterated
+# names (de Bot, van der Berg, von Neumann, del Toro). Included in a
+# narrative phrase when found immediately before the surname.
+_SURNAME_PARTICLES = frozenset({
+    "de", "van", "der", "den", "von", "da", "del", "della", "di",
+    "la", "le", "du", "dos", "das", "ter", "ten", "op", "zu", "bin",
+})
+
 # Maximum number of words to look back when hunting for a narrative author.
 _NARRATIVE_LOOKBACK_WORDS = 8
 
@@ -337,19 +345,51 @@ class InTextExtractor:
         )
         et_al_parts = self._et_al_token_parts()
 
+        # Walk backwards from the parenthesis in two states:
+        #
+        #   EXPECT_SURNAME    -- looking for the nearest capitalized
+        #                        token, which is the surname. Skip
+        #                        et-al parts, which appear first in
+        #                        the backwards walk ("al", "et").
+        #
+        #   EXPECT_EXTENSION  -- surname found. Only accept lowercase
+        #                        particles (de, van, der) to extend
+        #                        it, a conjunction ("and") to add a
+        #                        previous author, or further et-al
+        #                        parts. A bare capitalized word with
+        #                        no conjunction before it is a clause
+        #                        starter ("Following Guastello") and
+        #                        terminates the walk.
+        EXPECT_SURNAME = 0
+        EXPECT_EXTENSION = 1
+        state = EXPECT_SURNAME
+
         collected: list[str] = []
         for token in reversed(window):
             bare = token.strip(".,;:()[]'\"\u2019\u2018")
             if not bare:
                 break
             bare_lower = bare.casefold()
+
+            if state == EXPECT_SURNAME:
+                if bare_lower in et_al_parts:
+                    collected.append(token)
+                    continue
+                if bare[0].isalpha() and bare[0].isupper():
+                    collected.append(token)
+                    state = EXPECT_EXTENSION
+                    continue
+                break
+
+            # state == EXPECT_EXTENSION
+            if bare_lower in _SURNAME_PARTICLES:
+                collected.append(token)
+                continue
             if bare_lower in conjunctions_lower:
                 collected.append(token)
+                state = EXPECT_SURNAME
                 continue
             if bare_lower in et_al_parts:
-                collected.append(token)
-                continue
-            if bare[0].isalpha() and bare[0].isupper():
                 collected.append(token)
                 continue
             break
