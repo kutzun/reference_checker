@@ -89,6 +89,14 @@ _ARTICLE_CILT_SAYI = re.compile(
     re.IGNORECASE,
 )
 
+# APA-style volume(issue) marker: "Journal Name, 11(8)," or
+# "Nature, 580(7801),". Catches journal articles whose journal name
+# contains none of the keywords in _ARTICLE_MARKERS and that use
+# parenthesized issue notation instead of the spelled-out Turkish form.
+# Deliberately requires a comma before the volume digits, so an author
+# line like "Smith, J. (2020)." is not misidentified.
+_ARTICLE_VOLUME_ISSUE = re.compile(r",\s*\d+\s*\(\s*\d+\s*\)")
+
 
 def _fold(s: str) -> str:
     """Lower-case *s* and normalise Turkish characters to ASCII."""
@@ -159,6 +167,8 @@ def is_article_looking(reference: Reference) -> bool:
     if _ARTICLE_QUOTED_TITLE.search(text):
         return True
     if _ARTICLE_CILT_SAYI.search(_fold(text)):
+        return True
+    if _ARTICLE_VOLUME_ISSUE.search(text):
         return True
     return False
 
