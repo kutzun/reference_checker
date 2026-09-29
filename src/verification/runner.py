@@ -58,11 +58,12 @@ def _verify_and_report(
             DoiOrgProvider(),
             CrossrefProvider(email=crossref_email),
             TrDizinProvider(),
-            # Google Books requires a user-supplied key. Without one
-            # the provider returns no matches, and its supports() hook
-            # tells the cascade to skip it entirely.
-            GoogleBooksProvider(api_key=google_books_key),
+            # OpenLibrary runs before Google Books to conserve the
+            # user's Google API quota: keyless providers get first
+            # shot at every reference, and Google Books only fires
+            # when nothing else has verified.
             OpenLibraryProvider(),
+            GoogleBooksProvider(api_key=google_books_key),
         ],
     )
 
