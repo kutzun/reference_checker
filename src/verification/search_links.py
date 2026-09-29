@@ -182,18 +182,21 @@ def primary_search_url(reference: Reference) -> str | None:
     if not title:
         return None
 
-    encoded = quote(f'"{title}"')
+    # KAŞİF works better without enclosing quotes; Scholar uses them
+    # as an exact-phrase operator and keeps them.
+    encoded_quoted = quote(f'"{title}"')
+    encoded_plain = quote(title)
 
     if is_article_looking(reference):
-        return f"https://scholar.google.com/scholar?q={encoded}"
+        return f"https://scholar.google.com/scholar?q={encoded_quoted}"
 
     if is_turkish_looking(reference):
         return (
             "https://kasif.mkutup.gov.tr/OpacArama.aspx"
-            f"?Ara={encoded}&DtSrc=0&fld=-1&NvBar=0"
+            f"?Ara={encoded_plain}&DtSrc=0&fld=-1&NvBar=0"
         )
 
-    return f"https://scholar.google.com/scholar?q={encoded}"
+    return f"https://scholar.google.com/scholar?q={encoded_quoted}"
 
 
 def search_link_label(url: str | None) -> str:

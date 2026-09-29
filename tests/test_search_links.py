@@ -87,14 +87,17 @@ def test_non_turkish_goes_to_google_scholar():
     assert "%22Thing%20theory%22" in url
 
 
-def test_kasif_query_is_quoted_and_encoded():
+def test_kasif_query_is_encoded_without_quotes():
+    """KAŞİF searches work better unquoted; the query is passed as a
+    plain encoded string, with no enclosing double quotes."""
     ref = Reference(
         title="Türk Mûsıkîsinin Mes'eleleri",
         raw_text="Tura, Y. (1988). Türk Mûsıkîsinin Mes'eleleri. Pan.",
     )
     url = primary_search_url(ref)
     assert url is not None
-    assert "%22T%C3%BCrk%20M%C3%BBs%C4%B1k%C3%AEsinin" in url
+    assert "%22" not in url
+    assert "Ara=T%C3%BCrk%20M%C3%BBs%C4%B1k%C3%AEsinin" in url
 
 
 def test_returns_none_when_no_title_or_text():
