@@ -6,7 +6,7 @@ average. Missing metadata reduces the total weight of evidence, not the score.
 Exact identifier matches (DOI, ISBN) always yield a score of 1.0.
 """
 
-from models import Reference, ReferenceMatch
+from models import Reference, ReferenceMatch, ReferenceType
 
 from .authors import author_similarity
 from .similarity import token_similarity
@@ -67,9 +67,18 @@ class ReferenceMatcher:
         total_weight = 0.0
 
         # Title (weight 0.5)
-        if reference.title and match.title:
+        # For a book chapter, the candidate returned by every provider
+        # is the book itself — its "title" field holds the book title,
+        # not the chapter title. Compare the reference's book_title
+        # against it; comparing the chapter title produces a low score
+        # for a correct match.
+        is_chapter = reference.reference_type == ReferenceType.BOOK_CHAPTER
+        title_for_compare = (
+            reference.book_title if is_chapter else reference.title
+        )
+        if title_for_compare and match.title:
             match.title_similarity = token_similarity(
-                reference.title, match.title
+                title_for_compare, match.title
             )
             w = 0.5
             weighted_sum += match.title_similarity * w
@@ -86,7 +95,14 @@ class ReferenceMatcher:
             match.book_title_similarity = book_sim
 
         # Authors (weight 0.3)
-        if reference.authors and match.authors:
+        # For a book chapter, the chapter author is not the book
+        # author; comparing them penalises every correct match. Skip
+        # the author signal entirely for chapters.
+        if (
+            not is_chapter
+            and reference.authors
+            and match.authors
+        ):
             match.author_similarity = author_similarity(
                 reference.authors, match.authors
             )

@@ -90,7 +90,6 @@ def _extract_last_first(author_block: str) -> List[str]:
             (?:[A-ZÀ-ÖØ-ÞĀ-ſ]\.?\s*)+   # one or more initials
             (?:-[A-ZÀ-ÖØ-ÞĀ-ſ]\.?)?     # optional hyphenated initial
         )
-        (?![A-Za-zÀ-ÖØ-öø-ÿĀ-ſ])        # next char must not be a letter
         """,
         re.VERBOSE | re.UNICODE,
     )
@@ -547,6 +546,38 @@ def extract_publisher(text: str) -> str | None:
         return m.group(1).strip()
 
     return None
+
+def extract_book_title(text: str) -> str | None:
+    """
+    Extract the book title from a book-chapter reference.
+
+    APA style places the chapter title immediately after the year and
+    the book title after the editor list, terminated by the page-range
+    parenthetical:
+
+        Kellogg, R. T. (1996). A model of working memory in writing.
+        In C. M. Levy & S. Ransdell (Eds.), The science of writing:
+        Theories, methods, individual differences, and applications
+        (pp. 57-71). Lawrence Erlbaum Associates, Inc.
+
+    The book title is ``The science of writing: Theories, methods,
+    individual differences, and applications``.
+
+    Recognised editor markers: ``(Ed.)``, ``(Eds.)``, ``(Ed)``,
+    ``(Eds)``, ``(Haz.)``, ``(Haz)``, ``(Cilt N)``. If the reference
+    does not have the ``In <editors>, BOOK TITLE (pp. N-N)`` shape,
+    returns None.
+    """
+    pattern = re.compile(
+        r"\bIn\s+.+?\((?:Eds?\.?|Haz\.?|Cilt\s+\d+)\)\s*,\s*"
+        r"(.+?)\s*\(pp\.\s*\d+",
+        re.IGNORECASE | re.UNICODE,
+    )
+    m = pattern.search(text)
+    if not m:
+        return None
+    candidate = m.group(1).strip().rstrip(".,;")
+    return candidate or None
 
 def _is_likely_page_fragment(text: str) -> bool:
     """Return True if *text* looks like a page number or volume/issue info."""

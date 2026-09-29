@@ -27,8 +27,16 @@ class OpenLibraryProvider(VerificationProvider):
     def search(self, reference: Reference) -> list[ReferenceMatch]:
         """
         Search OpenLibrary for matching works.
+
+        For book chapters, query by the book title — OpenLibrary holds
+        books, not the chapters inside them, and the chapter title
+        returns nothing.
         """
-        query = reference.title or reference.book_title or reference.raw_text
+        if reference.reference_type == ReferenceType.BOOK_CHAPTER:
+            query = reference.book_title
+        else:
+            query = reference.title or reference.book_title or reference.raw_text
+
         if not query:
             return []
 

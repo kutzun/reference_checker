@@ -69,12 +69,27 @@ class GoogleBooksProvider(VerificationProvider):
         """
         Build a Google Books query from a reference.
 
-        Uses the title and first author's surname. Google Books does
-        its own fuzzy matching, so surname alone is enough and avoids
-        issues with initials or name-order variations.
+        For book chapters, the chapter author is not the book author —
+        the book is indexed under its editors. Query by the book title
+        alone, with no inauthor filter; an inauthor filter built from
+        the chapter author excludes every correct result.
+
+        For everything else (monographs, standalone books), use the
+        title and first author's surname. Google Books does its own
+        fuzzy matching, so surname alone is enough and avoids issues
+        with initials or name-order variations.
 
         Returns None if the reference has no usable title.
         """
+        if reference.reference_type == ReferenceType.BOOK_CHAPTER:
+            book_title = reference.book_title
+            if not book_title:
+                return None
+            book_clean = book_title.replace('"', "").strip()
+            if not book_clean:
+                return None
+            return f'intitle:"{book_clean}"'
+
         title = reference.title or reference.book_title
         if not title:
             return None

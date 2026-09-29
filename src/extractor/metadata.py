@@ -16,6 +16,7 @@ from .patterns import (
 )
 from .text_metadata import (
     extract_authors,
+    extract_book_title,
     extract_issue,
     extract_journal,
     extract_pages,
@@ -66,6 +67,8 @@ def extract_metadata(
     reference.authors = extract_authors(text)
 
     reference.title = extract_title(text)
+
+    reference.book_title = extract_book_title(text)
 
     reference.journal = extract_journal(text)
 
