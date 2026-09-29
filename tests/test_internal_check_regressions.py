@@ -297,3 +297,132 @@ def test_year_suffix_turkish():
 
     assert result.missing_references() == []
     assert result.uncited_references() == []
+
+    
+
+# ---------------------------------------------------------------------------
+# Defect 4 — comma-separated years collapse to a single citation
+# ---------------------------------------------------------------------------
+
+def test_comma_separated_years_english():
+    """
+    "(Köhler, 1986, 2012)" is a legal APA construct meaning BOTH
+    Köhler-1986 and Köhler-2012. On current code, _YEAR_RE.search
+    returns only the first year, so a single citation for 1986 is
+    emitted and 2012 is silently dropped.
+
+    When the reference list contains both works, the 2012 reference
+    is falsely reported as uncited.
+    """
+    body = "The pattern held across scales (Köhler, 1986, 2012)."
+    refs = [
+        Reference(
+            raw_text=(
+                "Köhler, R. (1986). Zur linguistischen Synergetik. "
+                "Studienverlag Dr. N. Brockmeyer."
+            ),
+            authors=["Köhler"],
+            year=1986,
+        ),
+        Reference(
+            raw_text="Köhler, R. (2012). Quantitative syntax analysis. De Gruyter Mouton.",
+            authors=["Köhler"],
+            year=2012,
+        ),
+    ]
+
+    service = InternalCheckService(profile=ENGLISH)
+    result = service.check_text(body, refs)
+
+    parenthetical = [
+        c for c in result.citations
+        if c.kind == CitationKind.PARENTHETICAL
+    ]
+    assert len(parenthetical) == 2, (
+        f"expected 2 parenthetical citations (one per year), "
+        f"got {len(parenthetical)}; "
+        f"years={[c.year for c in parenthetical]!r}"
+    )
+    assert [c.year for c in parenthetical] == [1986, 2012], (
+        f"expected years [1986, 2012] in order, "
+        f"got {[c.year for c in parenthetical]!r}"
+    )
+
+    assert result.missing_references() == []
+    assert result.uncited_references() == []
+
+
+def test_comma_separated_years_turkish():
+    """
+    Turkish twin. "(Yılmaz, 2018, 2020)" must yield two citations.
+    Same defect, exercised against the Turkish profile and a surname
+    that requires Turkish-aware normalization on the reference side.
+    """
+    body = "Bu örüntü farklı ölçeklerde tutarlıdır (Yılmaz, 2018, 2020)."
+    refs = [
+        Reference(
+            raw_text="Yılmaz, A. (2018). Birinci çalışma. Dergi Adı, 3(1), 1-10.",
+            authors=["Yılmaz"],
+            year=2018,
+        ),
+        Reference(
+            raw_text="Yılmaz, A. (2020). İkinci çalışma. Dergi Adı, 4(2), 11-20.",
+            authors=["Yılmaz"],
+            year=2020,
+        ),
+    ]
+
+    service = InternalCheckService(profile=TURKISH)
+    result = service.check_text(body, refs)
+
+    parenthetical = [
+        c for c in result.citations
+        if c.kind == CitationKind.PARENTHETICAL
+    ]
+    assert len(parenthetical) == 2, (
+        f"expected 2 parenthetical citations (one per year), "
+        f"got {len(parenthetical)}; "
+        f"years={[c.year for c in parenthetical]!r}"
+    )
+    assert [c.year for c in parenthetical] == [2018, 2020]
+
+    assert result.missing_references() == []
+    assert result.uncited_references() == []
+
+
+def test_comma_separated_years_does_not_misfire_on_pages():
+    """
+    Contract guard for the fix, not a bug-flag test. This test PASSES
+    on current code and MUST STILL PASS after the comma-separated-year
+    fix is applied.
+
+    "(Smith, 2020, p. 1945)" is a citation of Smith-2020 with a page
+    locator. 1945 is a page number, not a second year. A naive fix
+    that treats every 4-digit number in the segment as a year would
+    emit a spurious Smith-1945 citation, producing a false MISSING
+    issue against a reference list that (correctly) has no Smith-1945.
+    """
+    body = "As noted previously (Smith, 2020, p. 1945), the effect is robust."
+    refs = [
+        Reference(
+            raw_text="Smith, J. (2020). Some title. Journal of Examples, 1(1), 1-10.",
+            authors=["Smith"],
+            year=2020,
+        )
+    ]
+
+    service = InternalCheckService(profile=ENGLISH)
+    result = service.check_text(body, refs)
+
+    parenthetical = [
+        c for c in result.citations
+        if c.kind == CitationKind.PARENTHETICAL
+    ]
+    assert len(parenthetical) == 1, (
+        f"expected exactly 1 citation (Smith, 2020), "
+        f"got {len(parenthetical)}; "
+        f"years={[c.year for c in parenthetical]!r}"
+    )
+    assert parenthetical[0].year == 2020
+    assert result.missing_references() == []
+    assert result.uncited_references() == []

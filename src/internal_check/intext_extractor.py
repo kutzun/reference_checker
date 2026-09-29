@@ -207,15 +207,13 @@ class InTextExtractor:
             if is_non_citation(seg):
                 continue
 
-            year_match = _YEAR_RE.search(seg)
-            if not year_match:
+            year_matches = list(_YEAR_RE.finditer(seg))
+            if not year_matches:
                 self._unparsed.append((f"({seg})", location))
                 continue
 
-            year = int(year_match.group(1))
-            suffix = year_match.group(2) or None
-
-            author_part = seg[: year_match.start()].strip()
+            first = year_matches[0]
+            author_part = seg[: first.start()].strip()
             author_part = _TRAILING_PUNCT_RE.sub("", author_part)
             author_part = self._strip_leading_markers(author_part)
 
@@ -228,17 +226,35 @@ class InTextExtractor:
                 self._unparsed.append((f"({seg})", location))
                 continue
 
-            citations.append(
-                InTextCitation(
-                    raw=f"({seg})",
-                    kind=CitationKind.PARENTHETICAL,
-                    authors=authors,
-                    year=year,
-                    year_suffix=suffix,
-                    location=location,
-                    confidence=0.95,
+            # Decide which of the remaining years belong to the same
+            # author. A year belongs iff the text between the previous
+            # kept year and this year is only commas and whitespace.
+            #
+            #   "(Köhler, 1986, 2012)"     -> two citations
+            #   "(Smith, 2020a, 2020b)"    -> two citations (with suffix)
+            #   "(Smith, 2020, p. 1945)"   -> one citation (page locator)
+            kept = [first]
+            for m in year_matches[1:]:
+                between = seg[kept[-1].end(): m.start()]
+                if re.fullmatch(r"[\s,]+", between):
+                    kept.append(m)
+                else:
+                    break
+
+            for m in kept:
+                year = int(m.group(1))
+                suffix = m.group(2) or None
+                citations.append(
+                    InTextCitation(
+                        raw=f"({seg})",
+                        kind=CitationKind.PARENTHETICAL,
+                        authors=list(authors),
+                        year=year,
+                        year_suffix=suffix,
+                        location=location,
+                        confidence=0.95,
+                    )
                 )
-            )
 
         return citations
 
