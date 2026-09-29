@@ -47,61 +47,83 @@ class DocxParser:
         """
         Extract all non-empty paragraphs from DOCX.
 
-        Also extracts footnote texts and appends them as additional
-        paragraphs. python-docx does not read word/footnotes.xml, so
-        without this, citations living only in footnotes are invisible
-        to every downstream consumer of this method.
+        Footnote texts are merged into the paragraph that carries the
+        footnote marker, so they are visible to the extractor but do
+        not become separate paragraphs (which would land inside the
+        reference-section span and be misread as bibliography entries).
 
         Returns:
-            List of paragraph texts (body paragraphs followed by
-            footnote texts, in that order).
+            List of paragraph texts.
         """
 
         document = DocxDocument(self.file_path)
+        footnote_map = self._build_footnote_map()
 
         paragraphs = []
 
         for paragraph in document.paragraphs:
             text = paragraph.text.strip()
 
+            if footnote_map:
+                fn_ids = self._footnote_ids_for_paragraph(paragraph)
+                fn_texts = [
+                    footnote_map[fid]
+                    for fid in fn_ids
+                    if fid in footnote_map
+                ]
+                if fn_texts:
+                    text = (text + " " + " ".join(fn_texts)).strip()
+
             if text:
                 paragraphs.append(text)
 
-        paragraphs.extend(self._extract_footnote_texts())
-
         return paragraphs
 
-    def _extract_footnote_texts(self) -> list[str]:
+    def _footnote_ids_for_paragraph(self, paragraph) -> list[str]:
         """
-        Read word/footnotes.xml from the DOCX zip and return the text
-        content of every real footnote.
+        Return the w:id values of every footnote reference inside a
+        paragraph, in document order.
+        """
+        ids: list[str] = []
+        for elem in paragraph._element.iter():
+            tag = elem.tag
+            if isinstance(tag, str) and tag.endswith("}footnoteReference"):
+                fn_id = elem.get(f"{{{_W_NS}}}id")
+                if fn_id:
+                    ids.append(fn_id)
+        return ids
+
+    def _build_footnote_map(self) -> dict[str, str]:
+        """
+        Read word/footnotes.xml from the DOCX zip and return a mapping
+        from footnote id to footnote text.
 
         Word stores separator and continuation-separator footnotes with
-        ids 0 and -1; those are skipped. Returns an empty list if the
+        ids 0 and -1; those are skipped. Returns an empty dict if the
         file has no footnotes or if the archive cannot be read.
         """
 
         path = Path(self.file_path)
         if not path.exists():
-            return []
+            return {}
 
         try:
             with zipfile.ZipFile(path) as archive:
                 if "word/footnotes.xml" not in archive.namelist():
-                    return []
+                    return {}
                 raw_xml = archive.read("word/footnotes.xml")
         except (zipfile.BadZipFile, KeyError, OSError):
-            return []
+            return {}
 
         try:
             root = ET.fromstring(raw_xml)
         except ET.ParseError:
-            return []
+            return {}
 
-        texts: list[str] = []
+        result: dict[str, str] = {}
         for footnote in root.findall(f".//{{{_W_NS}}}footnote"):
             fn_id = footnote.get(f"{{{_W_NS}}}id")
-            if fn_id in ("0", "-1"):
+            if fn_id in ("0", "-1") or fn_id is None:
                 continue
             parts = [
                 (t.text or "")
@@ -109,9 +131,9 @@ class DocxParser:
             ]
             text = "".join(parts).strip()
             if text:
-                texts.append(text)
+                result[fn_id] = text
 
-        return texts
+        return result
 
     def extract_reference_section(self) -> list[str]:
         """

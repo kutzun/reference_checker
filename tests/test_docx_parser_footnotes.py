@@ -1,9 +1,10 @@
 """
 Tests for DocxParser footnote extraction.
 
-Footnote text must appear in extract_paragraphs() output so that
-citations living only in footnotes are visible to downstream
-consumers (internal check, verification).
+Footnote text must be visible to downstream consumers (internal
+check, verification), but must NOT become a separate paragraph —
+otherwise it lands inside the reference-section span and is misread
+as a bibliography entry.
 
 Fixture: test_data/fixtures/footnote_minimal.docx
   Body paragraph 1: "Body paragraph."
@@ -12,8 +13,9 @@ Fixture: test_data/fixtures/footnote_minimal.docx
   Body paragraph 3: "References"
   Body paragraph 4: "Bardakçı, M. (1986). Title. Publisher."
 
-The token "bkz." appears ONLY in the footnote, never in the body,
-so its presence is unambiguous evidence that footnotes were read.
+Expected result: 4 paragraphs. Footnote text is merged into the
+paragraph that carries its marker, not appended as a 5th paragraph
+and not attached to the reference paragraph.
 """
 
 from pathlib import Path
@@ -29,33 +31,31 @@ FIXTURE = (
 )
 
 
-def test_footnote_text_appears_in_paragraphs():
-    """
-    On unmodified DocxParser, footnote text is invisible: python-docx's
-    document.paragraphs does not read word/footnotes.xml. The result
-    is that a citation living only in a footnote is never seen by the
-    internal check, and the corresponding reference is falsely
-    reported as uncited.
-
-    Asserts on "bkz.", which appears only in the footnote, not in the
-    body or reference paragraphs.
-    """
+def test_footnote_text_merged_into_marker_paragraph():
     parser = DocxParser(FIXTURE)
     paragraphs = parser.extract_paragraphs()
-    joined = "\n".join(paragraphs)
 
-    assert "bkz." in joined, (
-        f"footnote text 'bkz.' not found in paragraphs. "
-        f"This means word/footnotes.xml was not read. "
-        f"Got: {paragraphs!r}"
+    assert len(paragraphs) == 4, (
+        f"expected 4 paragraphs (footnote text merged, not appended), "
+        f"got {len(paragraphs)}: {paragraphs!r}"
+    )
+
+    marker_paragraphs = [p for p in paragraphs if "footnote marker" in p]
+    assert len(marker_paragraphs) == 1
+    assert "bkz." in marker_paragraphs[0], (
+        f"footnote text not attached to its marker paragraph: "
+        f"{marker_paragraphs[0]!r}"
+    )
+
+    reference_paragraphs = [p for p in paragraphs if p.startswith("Bardakçı, M.")]
+    assert len(reference_paragraphs) == 1
+    assert "bkz." not in reference_paragraphs[0], (
+        f"footnote text leaked into the reference paragraph: "
+        f"{reference_paragraphs[0]!r}"
     )
 
 
 def test_body_paragraphs_still_extracted():
-    """
-    Contract guard: the fix must not break normal paragraph extraction.
-    The body text must still be present.
-    """
     parser = DocxParser(FIXTURE)
     paragraphs = parser.extract_paragraphs()
     joined = "\n".join(paragraphs)
