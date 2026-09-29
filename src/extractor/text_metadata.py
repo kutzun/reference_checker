@@ -60,27 +60,37 @@ def _is_likely_non_author(token: str) -> bool:
 
 def _extract_last_first(author_block: str) -> List[str]:
     """
-    Extract authors from a block that uses 'Surname, Initials' pattern.
-    Handles accented characters, multi‑word surnames, and initials
-    both with or without dots (e.g., S.A., S A, S, S. A.).
+    Extract authors from a block that uses the 'Surname, Initials'
+    pattern. Handles accented characters including Turkish letters in
+    Latin Extended-A (ı, İ, ğ, Ğ, ş, Ş), multi-word surnames with
+    lowercase particles, and initials with or without dots.
+
+    The trailing negative lookahead rejects a 'surname' that is
+    actually a given name: ``"Kılıç, Mahmud Erol, ..."`` produces no
+    match here because after the alleged initial ``M`` the next
+    character is a lowercase letter, meaning ``Mahmud`` is a full
+    given name, not initials. The caller's fallback then extracts
+    ``Kılıç`` correctly. For ``"Smith, J., Brown, A."`` the initial
+    ``J`` is followed by a period, so the pattern matches as before.
     """
     last_first_re = re.compile(
         r"""
         (?:^|,\s*)                      # start or preceded by a comma
         (                               # group 1: full surname
             (?:                         # optional lowercase particles
-                [a-zà-öø-ÿ]             # particle starts lowercase
-                [A-Za-zÀ-ÖØ-öø-ÿ'`\-]*  # rest of particle (no spaces)
+                [a-zà-öø-ÿā-ſ]
+                [A-Za-zÀ-ÖØ-öø-ÿĀ-ſ'`\-]*
                 \s+
             )*
-            [A-ZÀ-ÖØ-öø-ÿ]              # main surname first letter
-            [A-Za-zÀ-ÖØ-öø-ÿ'`\- ]*?    # rest of surname (reluctant)
+            [A-ZÀ-ÖØ-öø-ÿĀ-ſ]           # main surname first letter
+            [A-Za-zÀ-ÖØ-öø-ÿĀ-ſ'`\- ]*? # rest of surname (reluctant)
         )
         \s*,\s*                         # mandatory comma separator
         (                               # group 2: raw initials
-            (?:[A-Z]\.?\s*)+            # one or more initials, dot optional
-            (?:-[A-Z]\.?)?              # optional hyphenated initial
+            (?:[A-ZÀ-ÖØ-ÞĀ-ſ]\.?\s*)+   # one or more initials
+            (?:-[A-ZÀ-ÖØ-ÞĀ-ſ]\.?)?     # optional hyphenated initial
         )
+        (?![A-Za-zÀ-ÖØ-öø-ÿĀ-ſ])        # next char must not be a letter
         """,
         re.VERBOSE | re.UNICODE,
     )
@@ -100,6 +110,13 @@ def _parse_first_last_token(token: str) -> str:
     token = token.strip()
     if not token:
         return ""
+    # Compound surnames with an internal hyphen or apostrophe
+    # (Turkish/Ottoman style, e.g. "Ahmed-i Dâ'î", "Şeyh Galib",
+    # "Koca Ragıp Paşa") are already in the form the caller wants.
+    # Splitting on whitespace would pick the last word as the
+    # surname and misattribute the reference.
+    if "-" in token or "'" in token or "\u2019" in token:
+        return token
     parts = token.split()
     if not parts:
         return ""
