@@ -69,7 +69,7 @@ class LinkChecker:
                 timeout=self.timeout,
                 allow_redirects=True,
                 stream=True,
-                headers={"User-Agent": "ReferenceChecker/1.1"},
+                headers={"User-Agent": "ReferenceChecker/1.2"},
             )
             status = response.status_code
             response.close()

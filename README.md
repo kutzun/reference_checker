@@ -4,6 +4,8 @@ Reference Checker is a desktop application for verifying the accuracy and authen
 
 The software is designed for journal editors, editorial assistants, universities, and researchers who need to verify references quickly, consistently, and transparently.
 
+Version 1.2 fixes book-chapter verification, Turkish author-name matching, footnote handling, and KAŞİF search-link generation.
+
 Version 1.1 adds an internal consistency check that compares in-text citations against the reference list.
 
 ---

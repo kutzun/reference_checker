@@ -195,7 +195,7 @@ HTML_TEMPLATE = """
 
     <div class="footer">
         <button onclick="saveReport()" class="save-btn">💾 Save Report</button>
-        Reference Checker v1.1
+        Reference Checker v1.2
     </div>
 
     <script>

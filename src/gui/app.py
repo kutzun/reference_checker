@@ -787,7 +787,7 @@ def build_about_page():
         ):
             ui.label("Software Information").style(f"font-weight: bold; color: {COLORS['primary']};")
             ui.separator()
-            ui.label("Reference Checker v1.1").style(f"color: {COLORS['text']};")
+            ui.label("Reference Checker v1.2").style(f"color: {COLORS['text']};")
             ui.label("A tool for verifying bibliographic references in academic manuscripts.").style(
                 f"color: {COLORS['text']};"
             )
@@ -1017,7 +1017,7 @@ def main():
         f"background-color: {COLORS['white']}; padding: 0.8rem; text-align: center; "
         f"color: {COLORS['text_light']}; font-size: 0.85rem; border-top: 1px solid #e0e0e0;"
     ):
-        ui.label("Reference Checker v1.1").style("margin: 0 auto;")
+        ui.label("Reference Checker v1.2").style("margin: 0 auto;")
 
 
 if __name__ in {"__main__", "__mp_main__"}:
