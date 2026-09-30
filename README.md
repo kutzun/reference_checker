@@ -194,3 +194,4 @@ This project uses metadata provided by:
 - OpenLibrary
 - TR DİZİN
 - Google Books
+- doi.org
