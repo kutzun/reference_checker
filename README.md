@@ -22,7 +22,7 @@ Version 1.1 adds an internal consistency check that compares in-text citations a
 - Google Books verification (API required)
 - Local SQLite cache
 - Batch processing
-- Excel, CSV and PDF reports
+- In-app and HTML reports
 - Explainable verification decisions
 - Internal consistency check (citations ↔ references)
 
