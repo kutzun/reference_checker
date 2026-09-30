@@ -4,6 +4,8 @@ Reference Checker is a desktop application for verifying the accuracy and authen
 
 The software is designed for journal editors, editorial assistants, universities, and researchers who need to verify references quickly, consistently, and transparently.
 
+Version 1.2 adds Google Books (API required) and TR DİZİN verification, in addition to manual search options for Google Scholar and Kaşif (National Library of Türkiye) as well as clickable links for references with links. 
+
 Version 1.1 adds an internal consistency check that compares in-text citations against the reference list.
 
 ---
@@ -16,6 +18,8 @@ Version 1.1 adds an internal consistency check that compares in-text citations a
 - DOI validation
 - Crossref verification
 - OpenAlex verification
+- TR DİZİN verification
+- Google Books verification (API required)
 - Local SQLite cache
 - Batch processing
 - Excel, CSV and PDF reports
@@ -51,7 +55,7 @@ The Internal Check is available as a separate tab in the GUI. It runs locally, o
 | Component | Technology |
 |-----------|------------|
 | Language | Python 3.13 |
-| GUI | Tkinter |
+| GUI | NiceGUI |
 | Database | SQLite |
 | Testing | pytest |
 | Formatter | Black |
@@ -188,3 +192,5 @@ This project uses metadata provided by:
 
 - Crossref
 - OpenLibrary
+- TR DİZİN
+- Google Books
