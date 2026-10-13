@@ -17,7 +17,6 @@ Version 1.1 adds an internal consistency check that compares in-text citations a
 - Automatic reference extraction
 - DOI validation
 - Crossref verification
-- OpenAlex verification
 - TR DİZİN verification
 - Google Books verification (API required)
 - Local SQLite cache
