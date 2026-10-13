@@ -4,7 +4,7 @@ Reference Checker is a desktop application for verifying the accuracy and authen
 
 The software is designed for journal editors, editorial assistants, universities, and researchers who need to verify references quickly, consistently, and transparently.
 
-Version 1.2 adds Google Books (API required) and TR DİZİN verification, in addition to manual search options for Google Scholar and Kaşif (National Library of Türkiye) as well as clickable links for references with links. 
+Version 1.2 adds doi.org, Google Books (API required) and TR DİZİN verification, in addition to manual search options for Google Scholar and Kaşif (National Library of Türkiye) as well as clickable links for references with links. 
 
 Version 1.1 adds an internal consistency check that compares in-text citations against the reference list.
 
