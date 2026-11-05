@@ -1,11 +1,11 @@
 ; Inno Setup Script for Reference Checker
 [Setup]
 AppName=Reference Checker
-AppVersion=1.0
+AppVersion=1.2.2
 DefaultDirName={autopf}\ReferenceChecker
 DefaultGroupName=Reference Checker
 UninstallDisplayIcon={app}\ReferenceChecker.exe
-OutputBaseFilename=ReferenceChecker_Setup_v10
+OutputBaseFilename=ReferenceChecker_Setup_v1.2.2
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
