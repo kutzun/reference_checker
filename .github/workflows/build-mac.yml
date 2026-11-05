@@ -33,10 +33,10 @@ jobs:
           hdiutil create -volname "Reference Checker 1.2.1" \
             -srcfolder "dist/Reference Checker.app" \
             -ov -format UDZO \
-            ReferenceChecker_v121.dmg
+            ReferenceChecker_v122.dmg
 
       - name: Upload DMG
         uses: actions/upload-artifact@v4
         with:
-          name: ReferenceChecker-v1.2.1-macOS
-          path: ReferenceChecker_v121.dmg
+          name: ReferenceChecker-v1.2.2-macOS
+          path: ReferenceChecker_v122.dmg
