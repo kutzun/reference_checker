@@ -5,7 +5,7 @@ import sys
 from PyInstaller.utils.hooks import collect_all
 
 APP_NAME = "Reference Checker"
-APP_VERSION = "1.2.1"
+APP_VERSION = "1.2.2"
 EXE_NAME = "ReferenceChecker"
 BUNDLE_ID = "com.kutzun.referencechecker"
 
@@ -26,7 +26,7 @@ if sys.platform == "win32":
     else:
         raise SystemExit(f"python{_py_ver}.dll not found")
 
-for package in ("nicegui", "uvicorn", "fastapi", "starlette", "pydantic"):
+for package in ("nicegui", "uvicorn", "fastapi", "starlette", "pydantic", "docx", "certifi", "requests"):
     d, b, h = collect_all(package)
     datas += d
     binaries += b
@@ -61,7 +61,7 @@ exe = EXE(
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
-    codesign_identity=None,
+    codesign_identity="-",
     entitlements_file=None,
 )
 
